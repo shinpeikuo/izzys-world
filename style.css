@@ -32,7 +32,11 @@ html, body {
 }
 
 .star {
-  position: relative;
+  position: absolute;
+  left: 50%;
+  top: 78%;
+  translate: -50% -50%;
+  touch-action: none;
   width: 140px;
   height: 140px;
   border: none;
@@ -44,6 +48,7 @@ html, body {
   box-shadow: 0 8px 0 #e0a800;
   cursor: pointer;
 }
+.star.dragging { cursor: grabbing; scale: 1.1; }
 .star:active { transform: translateY(6px); box-shadow: 0 2px 0 #e0a800; }
 .star.spin { animation: spin 0.6s ease-out; }
 @keyframes spin { to { rotate: 360deg; } }
@@ -84,3 +89,83 @@ html, body {
   display: flex;
   gap: 10px;
 }
+
+/* --- Grown-up gear (press and hold) --- */
+.gear {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  width: 64px;
+  height: 64px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+  color: rgba(0, 0, 0, 0.45);
+  font-size: 34px;
+  display: grid;
+  place-items: center;
+  touch-action: none;
+}
+.gear span { grid-area: 1 / 1; }
+.gear-ring { grid-area: 1 / 1; width: 64px; height: 64px; rotate: -90deg; }
+.gear-ring circle {
+  fill: none;
+  stroke: #7b5cff;
+  stroke-width: 5;
+  stroke-dasharray: 183;
+  stroke-dashoffset: 183;
+}
+.gear.holding .gear-ring circle { stroke-dashoffset: 0; transition: stroke-dashoffset 2s linear; }
+
+/* --- Grown-up panel and confirm dialog --- */
+.panel-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(30, 20, 60, 0.55);
+  display: grid;
+  place-items: center;
+  z-index: 5;
+}
+.panel-backdrop[hidden] { display: none; }
+.panel {
+  position: relative;
+  width: min(640px, 92vw);
+  max-height: 92vh;
+  overflow: auto;
+  background: #fff;
+  border-radius: 24px;
+  padding: 28px 32px;
+  color: #333;
+}
+.panel h2 { font-size: 28px; margin-bottom: 18px; color: #7b5cff; }
+.panel p { margin-bottom: 16px; }
+.panel-buttons { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 12px; }
+.big-btn {
+  flex: 1 1 200px;
+  min-height: 72px;
+  border: none;
+  border-radius: 16px;
+  background: #7b5cff;
+  color: #fff;
+  font-size: 22px;
+  font-weight: 700;
+}
+.big-btn:active { filter: brightness(0.9); }
+.big-btn.danger { background: #e5484d; }
+.close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 56px;
+  height: 56px;
+  border: none;
+  border-radius: 50%;
+  background: #eee;
+  font-size: 26px;
+}
+.panel-message { min-height: 1.4em; font-weight: 700; }
+.panel-message.ok { color: #1f8a3b; }
+.panel-message.error { color: #c62828; }
+.panel-info { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; margin-bottom: 16px; }
+.panel-info dt { color: #888; }
+.panel-note { font-size: 14px; color: #777; }

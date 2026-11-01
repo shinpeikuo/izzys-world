@@ -20,6 +20,42 @@
     <button id="star" class="star" aria-label="Star">★</button>
   </main>
 
+  <!-- Grown-up area: press and hold the gear for 2 seconds to open -->
+  <button id="gear" class="gear" aria-label="Grown-ups">
+    <svg class="gear-ring" viewBox="0 0 64 64"><circle cx="32" cy="32" r="29" /></svg>
+    <span>⚙</span>
+  </button>
+
+  <div id="grownups" class="panel-backdrop" hidden>
+    <div class="panel">
+      <button id="close-panel" class="close" aria-label="Close">✕</button>
+      <h2>Grown-ups</h2>
+      <div class="panel-buttons">
+        <button id="save-backup" class="big-btn">💾 Save backup</button>
+        <button id="load-backup" class="big-btn">📂 Load backup</button>
+        <input id="backup-file" type="file" accept=".json,application/json" hidden>
+      </div>
+      <p id="panel-message" class="panel-message"></p>
+      <dl class="panel-info">
+        <dt>Last backup</dt><dd id="last-backup">never</dd>
+        <dt>Storage</dt><dd id="storage-status">…</dd>
+        <dt>Version</dt><dd id="panel-version"></dd>
+      </dl>
+      <p class="panel-note">Clearing Chrome data or uninstalling the app erases the world. Save a backup now and then, and keep the file somewhere safe (Google Drive, email).</p>
+    </div>
+  </div>
+
+  <div id="confirm" class="panel-backdrop" hidden>
+    <div class="panel confirm">
+      <h2>Replace world?</h2>
+      <p>The world on this tablet will be replaced by the backup.</p>
+      <div class="panel-buttons">
+        <button id="confirm-yes" class="big-btn danger">✓ Replace</button>
+        <button id="confirm-no" class="big-btn">✕ Cancel</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Shown only when the tablet is held upright -->
   <div id="rotate" aria-hidden="true">
     <div class="rotate-icon">📱↻</div>
@@ -31,6 +67,6 @@
     <span id="offline"></span>
   </footer>
 
-  <script src="app.js"></script>
+  <script type="module" src="app.js"></script>
 </body>
 </html>

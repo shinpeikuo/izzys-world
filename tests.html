@@ -1,0 +1,49 @@
+<!doctype html>
+<!-- Checks for the save system. Open /tests.html in a browser; every line should be green.
+     Not part of the game: it is not cached for offline use. -->
+<meta charset="utf-8">
+<title>Save tests</title>
+<style>body { font: 16px system-ui; padding: 20px; } .pass { color: green; } .fail { color: red; font-weight: bold; }</style>
+<h1>Save system tests</h1>
+<ul id="out"></ul>
+<script type="module">
+  import { migrate, newWorld, SAVE_VERSION, MIGRATIONS, NewerSaveError } from './save.js';
+
+  const out = document.getElementById('out');
+  function check(name, fn) {
+    let ok;
+    try { ok = fn(); } catch (e) { ok = false; name += ' (' + e.message + ')'; }
+    out.insertAdjacentHTML('beforeend', `<li class="${ok ? 'pass' : 'fail'}">${ok ? '✓' : '✗'} ${name}</li>`);
+  }
+  const wrap = (saveVersion, world) => ({ format: 'izzys-world-save', saveVersion, world });
+
+  check('a current save is left as is', () => {
+    const w = newWorld();
+    return JSON.stringify(migrate(wrap(SAVE_VERSION, w)).world) === JSON.stringify(w);
+  });
+
+  check('every old save version has a migration', () => {
+    for (let v = 1; v < SAVE_VERSION; v++) if (typeof MIGRATIONS[v] !== 'function') return false;
+    return true;
+  });
+
+  check('migrations run in order, one version at a time', () => {
+    const fake = { 1: (w) => ({ ...w, a: 1 }), 2: (w) => ({ ...w, b: w.a + 1 }) };
+    const r = migrate(wrap(1, { star: 1 }), fake, 3);
+    return r.saveVersion === 3 && r.world.a === 1 && r.world.b === 2 && r.world.star === 1;
+  });
+
+  check('migrating does not change the original save', () => {
+    const original = wrap(1, { list: [1] });
+    migrate(original, { 1: (w) => { w.list.push(2); return w; } }, 2);
+    return original.world.list.length === 1;
+  });
+
+  check('a save from a newer version is refused', () => {
+    try { migrate(wrap(SAVE_VERSION + 1, {})); return false; } catch (e) { return e instanceof NewerSaveError; }
+  });
+
+  check('a missing migration is an error, not a silent wipe', () => {
+    try { migrate(wrap(1, {}), {}, 2); return false; } catch { return true; }
+  });
+</script>
