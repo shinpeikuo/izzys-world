@@ -41,6 +41,8 @@ Izzy's World is an open-ended, creative play game inspired by Toca Boca. Players
 
 **Dress-up = outfit swaps.** Each look is a complete full-body image. A character's outfit picker shows that character's looks as thumbnails, and tapping one switches the look. (Mix-and-match layered clothing is deferred to V2.)
 
+**Getting characters into a room** (built 2026-11-01): a round people button (Izzy's face, top right next to the map) opens a drawer of everyone. Pull a person up out of it to bring them into the room you're in. Each person is in one place at a time. Dropping a person on the trash can or the drawer sends them back to the drawer. Izzy starts in the living room.
+
 ### 4.2 Pets
 - **Peacock** (from Izzy's main character art, separated out)
 - **Dog**

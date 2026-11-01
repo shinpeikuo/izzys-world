@@ -5,7 +5,7 @@
 // When the shape of the world changes in an update, bump SAVE_VERSION and add a
 // migration that upgrades the old shape, so existing worlds keep working.
 
-export const SAVE_VERSION = 3;
+export const SAVE_VERSION = 4;
 const FORMAT = 'izzys-world-save';
 const DB_NAME = 'izzys-world';
 const STORE = 'kv';
@@ -18,10 +18,13 @@ const META_KEY = 'meta';
 // screen: 'world' (the scene selector) or a room id such as 'house_living'.
 // rooms.<id>.items: [{ id, kind, x, y }] where kind is a catalog id and x, y
 // are the item's bottom-middle point in room pixels (1920 x 1080).
+// characters.<id>: { look, room, x, y } where id and look come from CHARACTERS in
+// catalog.js, and room is null while the character is waiting in the people drawer.
 export function newWorld() {
   return {
     screen: 'world',
     rooms: {},
+    characters: { izzy: { look: 'main', room: 'house_living', x: 760, y: 1000 } },
   };
 }
 
@@ -34,6 +37,8 @@ export const MIGRATIONS = {
   // with real art). The placeholder furniture is not carried over; the untouched
   // v2 save is kept on the device as 'pre-migration-v2'.
   2: () => ({ screen: 'world', rooms: {} }),
+  // v3 -> v4 (characters). Rooms and furniture stay as they are; Izzy waits in the living room.
+  3: (world) => ({ ...world, characters: { izzy: { look: 'main', room: 'house_living', x: 760, y: 1000 } } }),
 };
 
 export class NewerSaveError extends Error {}

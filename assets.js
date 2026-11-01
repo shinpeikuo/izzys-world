@@ -1,5 +1,14 @@
 // Written by tools/release.py: the real art files in art/. Do not edit by hand.
 export const ART = new Set([
+ "art/characters/caden_default.webp",
+ "art/characters/dad_default.webp",
+ "art/characters/izzy_hiphop.webp",
+ "art/characters/izzy_main.webp",
+ "art/characters/izzy_mustache.webp",
+ "art/characters/jane_default.webp",
+ "art/characters/mom_default.webp",
+ "art/characters/ollie_default.webp",
+ "art/characters/syd_default.webp",
  "art/places/cafe_bg.webp",
  "art/places/castle_bedroom_bg.webp",
  "art/places/castle_dining_bg.webp",
@@ -261,5 +270,6 @@ export const ART = new Set([
  "art/ui/arrow_left.webp",
  "art/ui/arrow_right.webp",
  "art/ui/gear.webp",
- "art/ui/map.webp"
+ "art/ui/map.webp",
+ "art/ui/people.webp"
 ]);

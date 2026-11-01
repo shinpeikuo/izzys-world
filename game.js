@@ -1,6 +1,6 @@
 // The game itself, drawn with Phaser (vendor/phaser.min.js).
 // Scenes: 'boot' loads all pictures, 'world' is the scene selector, 'room' shows one room.
-import { ROOMS, PLACES, artPath, itemFile, itemLayer, itemScale } from './catalog.js';
+import { ROOMS, PLACES, CHARACTERS, artPath, itemFile, itemLayer, itemScale, lookFile } from './catalog.js';
 
 const W = 1920;
 const H = 1080;
@@ -72,6 +72,10 @@ function addGear(scene, x, y, onGrownups, texture) {
   gear.on('pointerout', stop);
 }
 
+function lookKey(id, look) {
+  return 'char:' + id + '_' + look;
+}
+
 function sparkle(scene, x, y) {
   const c = scene.add.circle(x, y, 20, 0xffffff, 0.8).setDepth(UI_DEPTH);
   scene.tweens.add({ targets: c, radius: 70, alpha: 0, duration: 350, onComplete: () => c.destroy() });
@@ -95,7 +99,10 @@ class BootScene extends Phaser.Scene {
       this.load.image('bg:' + id, artPath(room.background));
       for (const kind of room.items) this.load.image(kind, artPath(itemFile(kind)));
     }
-    for (const name of ['gear', 'arrow_left', 'arrow_right', 'map']) this.load.image('ui:' + name, artPath('ui/' + name + '.webp'));
+    for (const [id, character] of Object.entries(CHARACTERS)) {
+      for (const look of character.looks) this.load.image(lookKey(id, look), artPath(lookFile(id, look)));
+    }
+    for (const name of ['gear', 'arrow_left', 'arrow_right', 'map', 'people']) this.load.image('ui:' + name, artPath('ui/' + name + '.webp'));
   }
 
   create() {
@@ -132,7 +139,7 @@ class WorldScene extends Phaser.Scene {
   }
 }
 
-// --- A room: background, items, item drawer, trash can, arrows ---
+// --- A room: background, items, people, drawers, trash can, arrows ---
 
 class RoomScene extends Phaser.Scene {
   constructor(saver, onGrownups) {
@@ -158,17 +165,30 @@ class RoomScene extends Phaser.Scene {
     for (const item of this.items) {
       if (this.textures.exists(item.kind)) this.addItemSprite(item); // unknown kinds stay in the save, just not shown
     }
+    this.characters = world.characters;
+    this.characterSprites = {};
+    for (const [id, c] of Object.entries(this.characters)) {
+      if (c.room === this.roomId && this.textures.exists(lookKey(id, c.look))) this.addCharacterSprite(id);
+    }
 
     addGear(this, ...room.ui.gear, this.onGrownups);
     this.createTrash(room.ui.trash);
-    this.createDrawer(room.items, room.ui);
+    this.drawers = [];
+    this.createDrawer(room.items.map((kind) => ({ texture: kind, kind })), room.ui.box);
+    this.peopleThumbs = {};
+    const people = Object.keys(CHARACTERS).map((id) => ({ texture: lookKey(id, this.lookOf(id)), character: id }));
+    this.createDrawer(people, [W - 250, 88], 'ui:people');
     this.createArrows(room);
+    this.picker = null;
 
     this.drags = new Map(); // pointer id -> what that finger is doing
     this.input.on('gameobjectdown', (pointer, obj) => this.onDown(pointer, obj));
     this.input.on('pointermove', (pointer) => this.onMove(pointer));
     this.input.on('pointerup', (pointer) => this.onUp(pointer));
     this.input.on('pointerupoutside', (pointer) => this.onUp(pointer));
+    this.input.on('pointerdown', (pointer, over) => {
+      if (this.picker && !over.some((o) => o.getData('picker'))) this.closePicker();
+    });
   }
 
   addItemSprite(item) {
@@ -179,8 +199,31 @@ class RoomScene extends Phaser.Scene {
     return sprite;
   }
 
+  // A person in their current look, standing with their feet at x, y.
+  addCharacterSprite(id) {
+    const c = this.characters[id];
+    const sprite = this.add.image(c.x, c.y, lookKey(id, c.look)).setOrigin(0.5, 1);
+    sprite.setInteractive({ pixelPerfect: true, alphaTolerance: 1 });
+    sprite.setData('character', id);
+    this.characterSprites[id] = sprite;
+    this.restDepth(sprite);
+    return sprite;
+  }
+
+  lookOf(id) {
+    const c = this.characters[id];
+    return c && CHARACTERS[id].looks.includes(c.look) ? c.look : CHARACTERS[id].looks[0];
+  }
+
+  // How big a sprite is when it is not being carried.
+  restScale(sprite) {
+    const item = sprite.getData('item');
+    return item ? itemScale(item.kind) : 1;
+  }
+
   restDepth(sprite) {
-    sprite.setDepth(LAYER_DEPTH[itemLayer(sprite.getData('item').kind)] + sprite.y);
+    const item = sprite.getData('item');
+    sprite.setDepth(LAYER_DEPTH[item ? itemLayer(item.kind) : 'stand'] + sprite.y);
   }
 
   // --- Arrows to the other rooms of this place, and the map button ---
@@ -206,59 +249,117 @@ class RoomScene extends Phaser.Scene {
     return Phaser.Math.Distance.Between(pointer.worldX, pointer.worldY, this.trashPos.x, this.trashPos.y) < BUTTON_R + 30;
   }
 
-  // --- Item drawer: the box button opens a row of items you can scroll sideways ---
+  // --- Drawers: the item box and the people button each open a row you can scroll
+  // sideways. Pull something upwards out of the row to put it in the room. ---
 
-  createDrawer(kinds, ui) {
+  createDrawer(entries, [bx, by], buttonTexture) {
     const left = 200;
     const width = W - 2 * left;
     const height = 200;
     const top = H - height - 10;
-    this.drawerOpen = false;
     this.drawerBounds = new Phaser.Geom.Rectangle(left, top, width, height);
+    const drawer = { open: false };
 
-    this.drawer = this.add.container(0, 0).setDepth(UI_DEPTH).setVisible(false).setAlpha(0);
+    drawer.panel = this.add.container(0, 0).setDepth(UI_DEPTH).setVisible(false).setAlpha(0);
     const panel = this.add.rectangle(left, top, width, height, 0xffffff, 0.94).setOrigin(0).setStrokeStyle(6, 0x7b5cff);
     panel.setInteractive(); // stops touches on the panel from reaching items behind it
-    panel.setData('drawerPanel', true);
-    this.drawer.add(panel);
+    panel.setData('drawer', drawer);
+    drawer.panel.add(panel);
 
     const slot = 180;
-    this.shelf = this.add.container(left, 0).setDepth(UI_DEPTH + 1).setVisible(false).setAlpha(0);
-    kinds.forEach((kind, i) => {
-      const thumb = this.add.image(slot * (i + 0.5), top + height / 2, kind);
-      const tex = this.textures.get(kind).getSourceImage();
+    drawer.shelf = this.add.container(left, 0).setDepth(UI_DEPTH + 1).setVisible(false).setAlpha(0);
+    entries.forEach((entry, i) => {
+      const thumb = this.add.image(slot * (i + 0.5), top + height / 2, entry.texture);
+      const tex = this.textures.get(entry.texture).getSourceImage();
       thumb.setScale(Math.min((slot - 30) / tex.width, (height - 30) / tex.height));
       thumb.setInteractive({ pixelPerfect: true, alphaTolerance: 1 });
-      thumb.setData('thumbKind', kind);
-      this.shelf.add(thumb);
+      thumb.setData('drawer', drawer);
+      thumb.setData('thumb', entry);
+      if (entry.character) this.peopleThumbs[entry.character] = thumb;
+      drawer.shelf.add(thumb);
     });
-    this.shelfMinX = Math.min(left, left + width - slot * kinds.length);
-    this.shelfMaxX = left;
+    drawer.minX = Math.min(left, left + width - slot * entries.length);
+    drawer.maxX = left;
     const maskShape = this.make.graphics().fillRect(left + 4, top, width - 8, height);
-    this.shelf.setMask(maskShape.createGeometryMask());
+    drawer.shelf.setMask(maskShape.createGeometryMask());
 
-    // While the drawer is closed, its touch areas are switched off so they don't block items.
-    this.drawerTouch = [panel, ...this.shelf.list];
-    this.drawerTouch.forEach((o) => { o.input.enabled = false; });
+    // While the drawer is closed, its touch areas are switched off so they don't block the room.
+    drawer.touch = [panel, ...drawer.shelf.list];
+    drawer.touch.forEach((o) => { o.input.enabled = false; });
 
-    const box = addButton(this, ...ui.box, () => this.toggleDrawer());
-    this.boxPos = { x: ui.box[0], y: ui.box[1] };
-    box.setData('box', true);
+    addButton(this, bx, by, () => this.toggleDrawer(drawer), buttonTexture);
+    this.drawers.push(drawer);
   }
 
-  toggleDrawer() {
-    this.drawerOpen = !this.drawerOpen;
-    const parts = [this.drawer, this.shelf];
-    this.drawerTouch.forEach((o) => { o.input.enabled = this.drawerOpen; });
-    if (this.drawerOpen) parts.forEach((p) => p.setVisible(true));
+  toggleDrawer(drawer) {
+    for (const other of this.drawers) {
+      if (other !== drawer && other.open) this.showDrawer(other, false);
+    }
+    this.showDrawer(drawer, !drawer.open);
+  }
+
+  showDrawer(drawer, open) {
+    drawer.open = open;
+    const parts = [drawer.panel, drawer.shelf];
+    drawer.touch.forEach((o) => { o.input.enabled = open; });
+    if (open) parts.forEach((p) => p.setVisible(true));
     this.tweens.add({
-      targets: parts, alpha: this.drawerOpen ? 1 : 0, duration: 180,
-      onComplete: () => parts.forEach((p) => p.setVisible(this.drawerOpen)),
+      targets: parts, alpha: open ? 1 : 0, duration: 180,
+      onComplete: () => parts.forEach((p) => p.setVisible(drawer.open)),
     });
   }
 
   overDrawer(pointer) {
-    return this.drawerOpen && this.drawerBounds.contains(pointer.worldX, pointer.worldY);
+    return this.drawers.some((d) => d.open) && this.drawerBounds.contains(pointer.worldX, pointer.worldY);
+  }
+
+  // --- Outfit picker: tap a person who has more than one look ---
+
+  openPicker(sprite) {
+    const id = sprite.getData('character');
+    const looks = CHARACTERS[id].looks;
+    const slot = 130;
+    const height = 170;
+    const width = slot * looks.length + 20;
+    const x = Phaser.Math.Clamp(sprite.x, width / 2 + 10, W - width / 2 - 10);
+    const above = sprite.y - sprite.displayHeight - height / 2 - 20;
+    const y = above > height / 2 + 10 ? above : Math.min(sprite.y + height / 2 + 20, H - height / 2 - 10);
+
+    this.picker = this.add.container(x, y).setDepth(UI_DEPTH + 5).setScale(0.6).setAlpha(0);
+    const bg = this.add.rectangle(0, 0, width, height, 0xffffff, 0.96).setStrokeStyle(6, 0x7b5cff);
+    bg.setInteractive().setData('picker', true);
+    this.picker.add(bg);
+    looks.forEach((look, i) => {
+      const cx = -width / 2 + 10 + slot * (i + 0.5);
+      if (look === this.characters[id].look) this.picker.add(this.add.circle(cx, 0, 66, 0xffd23f, 0.6));
+      const thumb = this.add.image(cx, 0, lookKey(id, look));
+      thumb.setScale((height - 24) / thumb.height);
+      thumb.setInteractive().setData('picker', true).setData('onTap', () => this.setLook(sprite, look));
+      this.picker.add(thumb);
+    });
+    this.tweens.add({ targets: this.picker, scale: 1, alpha: 1, duration: 150, ease: 'Back.Out' });
+  }
+
+  closePicker() {
+    const picker = this.picker;
+    this.picker = null;
+    picker.list.forEach((o) => o.disableInteractive());
+    this.tweens.add({ targets: picker, scale: 0.6, alpha: 0, duration: 120, onComplete: () => picker.destroy() });
+  }
+
+  setLook(sprite, look) {
+    const id = sprite.getData('character');
+    this.characters[id].look = look;
+    this.saver.changed();
+    sprite.setTexture(lookKey(id, look));
+    this.peopleThumbs[id].setTexture(lookKey(id, look));
+    sparkle(this, sprite.x, sprite.y - sprite.displayHeight / 2);
+    if (this.picker) this.closePicker();
+    this.hop(sprite);
+  }
+
+  hop(sprite) {
+    this.tweens.add({ targets: sprite, y: sprite.y - 30, duration: 140, yoyo: true, ease: 'Quad.Out' });
   }
 
   // --- Touch handling ---
@@ -268,15 +369,16 @@ class RoomScene extends Phaser.Scene {
     const onTap = obj.getData('onTap');
     if (onTap) return this.drags.set(pointer.id, { button: obj, onTap });
 
-    const fromDrawer = obj.getData('thumbKind') || obj.getData('drawerPanel');
-    if (fromDrawer) {
+    const drawer = obj.getData('drawer');
+    if (drawer) {
       if (!this.overDrawer(pointer)) return; // a thumbnail scrolled out of view
       return this.drags.set(pointer.id, {
-        shelf: true, kind: obj.getData('thumbKind'), startX: pointer.worldX, startY: pointer.worldY, shelfX: this.shelf.x,
+        drawer, thumb: obj.getData('thumb'), startX: pointer.worldX, startY: pointer.worldY, shelfX: drawer.shelf.x,
       });
     }
 
-    if (obj.getData('item') && ![...this.drags.values()].some((d) => d.sprite === obj)) {
+    const movable = obj.getData('item') || obj.getData('character');
+    if (movable && ![...this.drags.values()].some((d) => d.sprite === obj)) {
       this.beginDrag(pointer, obj, { isNew: false, moved: false });
     }
   }
@@ -295,7 +397,8 @@ class RoomScene extends Phaser.Scene {
 
   lift(sprite) {
     sprite.setDepth(DRAG_DEPTH);
-    this.tweens.add({ targets: sprite, scale: itemScale(sprite.getData('item').kind) * 1.08, duration: 120 });
+    if (this.picker) this.closePicker();
+    this.tweens.add({ targets: sprite, scale: this.restScale(sprite) * 1.08, duration: 120 });
     this.tweens.add({ targets: this.trashGlow, alpha: 0.5, duration: 150 });
   }
 
@@ -305,16 +408,16 @@ class RoomScene extends Phaser.Scene {
     const dx = pointer.worldX - drag.startX;
     const dy = pointer.worldY - drag.startY;
 
-    if (drag.shelf) {
+    if (drag.drawer) {
       if (!drag.mode && Math.hypot(dx, dy) >= TAP_SLOP) {
-        // Sideways scrolls the drawer; upwards pulls the item out into the room.
-        drag.mode = drag.kind && -dy > Math.abs(dx) ? 'pull' : 'scroll';
+        // Sideways scrolls the drawer; upwards pulls the thing out into the room.
+        drag.mode = drag.thumb && -dy > Math.abs(dx) ? 'pull' : 'scroll';
       }
       if (drag.mode === 'scroll') {
-        this.shelf.x = Phaser.Math.Clamp(drag.shelfX + dx, this.shelfMinX, this.shelfMaxX);
+        drag.drawer.shelf.x = Phaser.Math.Clamp(drag.shelfX + dx, drag.drawer.minX, drag.drawer.maxX);
       } else if (drag.mode === 'pull') {
-        const item = { id: crypto.randomUUID(), kind: drag.kind, x: pointer.worldX, y: pointer.worldY };
-        const sprite = this.addItemSprite(item);
+        const t = drag.thumb;
+        const sprite = t.character ? this.pullCharacter(t.character, pointer) : this.pullItem(t.kind, pointer);
         sprite.y += sprite.displayHeight / 2; // held by its middle
         this.drags.delete(pointer.id);
         this.beginDrag(pointer, sprite, { isNew: true, moved: true });
@@ -342,19 +445,25 @@ class RoomScene extends Phaser.Scene {
       if (drag.button.getBounds().contains(pointer.worldX, pointer.worldY)) drag.onTap();
       return;
     }
-    if (drag.shelf) return;
+    if (drag.drawer) return;
 
     const s = drag.sprite;
     const item = s.getData('item');
+    const id = s.getData('character');
     if (!drag.moved) {
-      this.wiggle(s); // a tap: tap reactions come in a later step
+      if (!id) this.wiggle(s); // a tap: tap reactions come in a later step
+      else if (CHARACTERS[id].looks.length > 1) this.openPicker(s);
+      else this.hop(s);
     } else if (this.overTrash(pointer) || this.overDrawer(pointer)) {
-      this.removeItem(s, drag.isNew);
+      if (id) this.sendHome(s);
+      else this.removeItem(s, drag.isNew);
     } else {
-      item.x = Math.round(s.x);
-      item.y = Math.round(s.y);
-      if (drag.isNew) this.items.push(item);
-      this.tweens.add({ targets: s, scale: itemScale(item.kind), duration: 120 });
+      const target = item || this.characters[id];
+      target.x = Math.round(s.x);
+      target.y = Math.round(s.y);
+      if (id) target.room = this.roomId;
+      if (item && drag.isNew) this.items.push(item);
+      this.tweens.add({ targets: s, scale: this.restScale(s), duration: 120 });
       this.restDepth(s);
       this.saver.changed();
     }
@@ -362,6 +471,35 @@ class RoomScene extends Phaser.Scene {
     if (![...this.drags.values()].some((d) => d.sprite)) {
       this.tweens.add({ targets: this.trashGlow, alpha: 0, duration: 200 });
     }
+  }
+
+  pullItem(kind, pointer) {
+    return this.addItemSprite({ id: crypto.randomUUID(), kind, x: pointer.worldX, y: pointer.worldY });
+  }
+
+  // A person can only be in one place, so pulling them out of the drawer brings them
+  // here from wherever they were. They are saved here once they are dropped.
+  pullCharacter(id, pointer) {
+    const old = this.characterSprites[id];
+    if (old) {
+      for (const [pid, d] of this.drags) if (d.sprite === old) this.drags.delete(pid);
+      old.destroy();
+    }
+    if (!this.characters[id]) this.characters[id] = { look: this.lookOf(id), room: null, x: 0, y: 0 };
+    this.characters[id].look = this.lookOf(id);
+    const sprite = this.addCharacterSprite(id);
+    sprite.setPosition(pointer.worldX, pointer.worldY);
+    return sprite;
+  }
+
+  // Dropped on the trash can or a drawer: the person goes back to the people drawer.
+  sendHome(sprite) {
+    const id = sprite.getData('character');
+    this.characters[id].room = null;
+    this.saver.changed();
+    delete this.characterSprites[id];
+    sprite.disableInteractive();
+    this.tweens.add({ targets: sprite, scale: 0, duration: 200, onComplete: () => sprite.destroy() });
   }
 
   removeItem(sprite, isNew) {

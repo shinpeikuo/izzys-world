@@ -53,6 +53,13 @@
     return r.saveVersion === SAVE_VERSION && r.world.screen === 'world' && Object.keys(r.world.rooms).length === 0;
   });
 
+  check('v3 save keeps its rooms and furniture and gets Izzy', () => {
+    const rooms = { house_living: { items: [{ id: 'a', kind: 'living_sofa', x: 1, y: 2 }] } };
+    const r = migrate(wrap(3, { screen: 'house_living', rooms }));
+    return r.saveVersion === SAVE_VERSION && r.world.screen === 'house_living'
+      && JSON.stringify(r.world.rooms) === JSON.stringify(rooms) && r.world.characters.izzy.room === 'house_living';
+  });
+
   check('a missing migration is an error, not a silent wipe', () => {
     try { migrate(wrap(1, {}), {}, 2); return false; } catch { return true; }
   });

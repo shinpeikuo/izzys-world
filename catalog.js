@@ -1,4 +1,4 @@
-// Everything that can appear in the game: places, rooms and the items in them.
+// Everything that can appear in the game: people, places, rooms and the items in them.
 // To add an item: cut it with tools/cut_sheet.py, then add its id to a room's `items`.
 import { ART } from './assets.js';
 
@@ -9,6 +9,22 @@ export function artPath(file) {
 
 export function itemFile(kind) {
   return 'props/' + kind + '.webp';
+}
+
+// The people. Each look is a whole picture: art/characters/<id>_<look>.webp,
+// made by tools/prepare_characters.py. The first look is the one they start in.
+export const CHARACTERS = {
+  izzy: { looks: ['main', 'hiphop', 'mustache'] },
+  mom: { looks: ['default'] },
+  dad: { looks: ['default'] },
+  ollie: { looks: ['default'] },
+  caden: { looks: ['default'] },
+  jane: { looks: ['default'] },
+  syd: { looks: ['default'] },
+};
+
+export function lookFile(id, look) {
+  return 'characters/' + id + '_' + look + '.webp';
 }
 
 // Items are cut from the sheets at room size, so most need no settings.
