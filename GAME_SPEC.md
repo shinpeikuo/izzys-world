@@ -101,7 +101,7 @@ All art goes in the `art/` folder using the names below, so Claude Code can find
 **Keep original photos out of the game.** Any original photos used as references should go in a `_source-photos/` folder, which is excluded from the build and the website.
 
 ### 6.1 Sitting pictures (requested 2026-11-01)
-Every look needs a matching sitting picture. They replace the squashed-legs sitting that step 5 uses for now.
+Every look needs a matching sitting picture. *Done 2026-11-01: all 10 are in the game; a look added later without one falls back to the squashed-legs version.*
 
 **Prompt** (give the image tool the standing picture as the reference):
 > Same character, same outfit, same cartoon style and colors. Full body, sitting on an invisible seat, facing forward, knees bent, feet flat on the floor, one hand resting on a knee and the other on the lap. Plain white background. No chair, no shadow, nothing else in the picture.

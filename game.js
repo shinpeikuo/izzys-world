@@ -1,7 +1,7 @@
 // The game itself, drawn with Phaser (vendor/phaser.min.js).
 // Scenes: 'boot' loads all pictures, 'world' is the scene selector, 'room' shows one room.
 import {
-  ROOMS, PLACES, CHARACTERS, SEATS, REACTIONS, HOLD_MAX, artPath, itemFile, itemLayer, itemScale, lookFile, body,
+  ROOMS, PLACES, CHARACTERS, SEATS, REACTIONS, HOLD_MAX, artPath, itemFile, itemLayer, itemScale, lookFile, body, hasArt,
 } from './catalog.js';
 
 const W = 1920;
@@ -108,16 +108,19 @@ class BootScene extends Phaser.Scene {
       for (const kind of room.items) this.load.image(kind, artPath(itemFile(kind)));
     }
     for (const [id, character] of Object.entries(CHARACTERS)) {
-      for (const look of character.looks) this.load.image(lookKey(id, look), artPath(lookFile(id, look)));
+      for (const look of character.looks) {
+        this.load.image(lookKey(id, look), artPath(lookFile(id, look)));
+        if (hasArt(lookFile(id, look, 'sit'))) this.load.image(sitKey(id, look), artPath(lookFile(id, look, 'sit')));
+      }
     }
     for (const name of ['gear', 'arrow_left', 'arrow_right', 'map', 'people']) this.load.image('ui:' + name, artPath('ui/' + name + '.webp'));
   }
 
   create() {
-    // Sitting pictures: the same drawing with the legs squashed, made once at start-up.
+    // Looks without a sitting picture yet: the standing drawing with the legs squashed.
     for (const [id, character] of Object.entries(CHARACTERS)) {
       for (const look of character.looks) {
-        if (!this.textures.exists(lookKey(id, look))) continue;
+        if (!this.textures.exists(lookKey(id, look)) || this.textures.exists(sitKey(id, look))) continue;
         const src = this.textures.get(lookKey(id, look)).getSourceImage();
         const top = Math.round(src.height * body(id, look).hip);
         const legs = src.height - top;
@@ -256,8 +259,9 @@ class RoomScene extends Phaser.Scene {
     const pose = seat ? SEATS[seat.getData('item').kind][0] : 'stand';
     sprite.setData('pose', pose);
     if (pose === 'sit') {
-      const hip = body(id, c.look).hip;
-      sprite.setTexture(sitKey(id, c.look)).setAngle(0).setOrigin(0.5, hip / (hip + (1 - hip) * SIT_SQUASH));
+      const b = body(id, c.look);
+      const origin = this.hasSitPicture(id, c.look) ? b.seat : b.hip / (b.hip + (1 - b.hip) * SIT_SQUASH);
+      sprite.setTexture(sitKey(id, c.look)).setAngle(0).setOrigin(0.5, origin);
     } else if (pose === 'lie') {
       sprite.setTexture(lookKey(id, c.look)).setAngle(-90).setOrigin(0.5, 0.5);
     } else {
@@ -268,7 +272,7 @@ class RoomScene extends Phaser.Scene {
   // Where someone sits on spot number `spot` of a seat (their hips go here).
   seatPoint(seat, spot, sprite) {
     const [pose, height, spots = 1] = SEATS[seat.getData('item').kind];
-    const spacing = (seat.displayWidth * 0.8) / spots;
+    const spacing = (seat.displayWidth * 0.9) / spots;
     const x = seat.x + (spot - (spots - 1) / 2) * spacing;
     let y = seat.y - height * seat.displayHeight;
     if (pose === 'lie') y -= sprite.width * 0.15; // lying down: the middle of the body, just above the mattress
@@ -297,15 +301,24 @@ class RoomScene extends Phaser.Scene {
     return null;
   }
 
+  // A real sitting picture, rather than the squashed standing one made at start-up.
+  hasSitPicture(id, look) {
+    return hasArt(lookFile(id, look, 'sit'));
+  }
+
   // Where a person's free hand is in the room right now.
   handPoint(sprite) {
     const id = sprite.getData('character');
     const look = this.characters[id].look;
     const b = body(id, look);
     const fullHeight = this.textures.get(lookKey(id, look)).getSourceImage().height;
+    let px = b.hand[0] * sprite.width;
     let py = b.hand[1] * fullHeight;
-    if (sprite.getData('pose') === 'sit' && b.hand[1] > b.hip) py = (b.hip + (b.hand[1] - b.hip) * SIT_SQUASH) * fullHeight;
-    const lx = b.hand[0] * sprite.width - sprite.originX * sprite.width;
+    if (sprite.getData('pose') === 'sit') {
+      if (this.hasSitPicture(id, look)) [px, py] = [b.sitHand[0] * sprite.width, b.sitHand[1] * sprite.height];
+      else if (b.hand[1] > b.hip) py = (b.hip + (b.hand[1] - b.hip) * SIT_SQUASH) * fullHeight;
+    }
+    const lx = px - sprite.originX * sprite.width;
     const ly = py - sprite.originY * sprite.height;
     const cos = Math.cos(sprite.rotation);
     const sin = Math.sin(sprite.rotation);

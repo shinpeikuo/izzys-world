@@ -12,6 +12,7 @@ catalog.js and run tools/release.py.
 
 Needs: python -m pip install --user numpy scipy
 """
+import sys
 from pathlib import Path
 
 import numpy as np
@@ -34,6 +35,14 @@ LOOKS = {
     "caden_default": ("Caden.jpg", 400),
     "jane_default": ("Jane.jpg", 400),
     "syd_default": ("syd.jpg", 380),
+}
+
+# Sitting pictures are shrunk by the same amount as the standing one. Some were drawn a
+# little closer up; this fixes those so the face comes out the same size (measured by eye,
+# comparing the faces in the two pictures).
+SIT_SIZE = {
+    "izzy_main": 0.83, "izzy_hiphop": 0.88, "izzy_princess": 0.84, "mom_default": 0.895,
+    "caden_default": 0.86, "jane_default": 0.87, "syd_default": 0.88,
 }
 
 
@@ -87,16 +96,41 @@ def make_people_button(izzy):
     return button
 
 
+def pose_file(file, pose):
+    """The sitting or lying picture for a look: same name plus ' sitting' or ' lying'.
+    Capital letters and extra spaces don't matter."""
+    def norm(name):
+        return " ".join(name.lower().split())
+    wanted = norm(Path(file).stem + " " + pose)
+    for p in SRC.iterdir():
+        if norm(p.stem) == wanted:
+            return p
+    return None
+
+
 def main():
     out_dir = ROOT / "art" / "characters"
     out_dir.mkdir(parents=True, exist_ok=True)
+    only = sys.argv[1:]  # optional: just these looks, e.g. izzy_main
     for name, (file, height) in LOOKS.items():
+        if only and name not in only:
+            continue
         figure = cut_out(SRC / file)
-        width = round(figure.width * height / figure.height)
+        scale = height / figure.height
+        width = round(figure.width * scale)
         figure.resize((width, height), Image.LANCZOS).save(out_dir / f"{name}.webp", quality=90)
         print(f"{name}: {width}x{height}")
         if name == "izzy_main":
             make_people_button(figure).save(ROOT / "art" / "ui" / "people.webp", quality=92)
+
+        # Sitting picture: the same size as standing, so the face matches.
+        sitting = pose_file(file, "sitting")
+        if sitting:
+            sit = cut_out(sitting)
+            sit_scale = scale * SIT_SIZE.get(name, 1)
+            size = (round(sit.width * sit_scale), round(sit.height * sit_scale))
+            sit.resize(size, Image.LANCZOS).save(out_dir / f"{name}_sit.webp", quality=90)
+            print(f"{name}_sit: {size[0]}x{size[1]}")
 
 
 main()
