@@ -1,6 +1,6 @@
 // Set the version with: python tools/release.py 1.2.3 (also updates app.js).
 // That is what tells tablets there is an update to download.
-const VERSION = '0.6.0';
+const VERSION = '0.6.1';
 const CACHE = 'izzys-world-' + VERSION;
 
 // Every file the game needs to run offline. Filled in by tools/release.py.
@@ -23,6 +23,7 @@ const FILES = [
   "art/characters/izzy_hiphop.webp",
   "art/characters/izzy_main.webp",
   "art/characters/izzy_mustache.webp",
+  "art/characters/izzy_princess.webp",
   "art/characters/jane_default.webp",
   "art/characters/mom_default.webp",
   "art/characters/ollie_default.webp",

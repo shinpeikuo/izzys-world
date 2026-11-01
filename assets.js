@@ -5,6 +5,7 @@ export const ART = new Set([
  "art/characters/izzy_hiphop.webp",
  "art/characters/izzy_main.webp",
  "art/characters/izzy_mustache.webp",
+ "art/characters/izzy_princess.webp",
  "art/characters/jane_default.webp",
  "art/characters/mom_default.webp",
  "art/characters/ollie_default.webp",

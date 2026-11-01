@@ -30,7 +30,7 @@ Izzy's World is an open-ended, creative play game inspired by Toca Boca. Players
 
 | Character | Looks available now | Source file | Art prep needed |
 |---|---|---|---|
-| Izzy | Main (white top, jeans, boots), Hip-hop (sequin-stripe tracksuit), Mustache (red tee, fake mustache) | `Izzy Main Character.jpg`, `hiphop Izzy.jpg`, `mustache Izzy.jpg` | Remove backgrounds. Separate the peacock from the main image. Hip-hop has a photo background to remove. |
+| Izzy | Main (white top, jeans, boots), Hip-hop (sequin-stripe tracksuit), Mustache (red tee, fake mustache), Princess (pink gown, tiara) | `Izzy Main Character.jpg`, `hiphop Izzy.jpg`, `mustache Izzy.jpg`, `princess Izzy.jpg` | Remove backgrounds. Separate the peacock from the main image. Hip-hop has a photo background to remove. |
 | Mom | Default (yellow tank, denim shorts) | `mom.jpg` | Remove background |
 | Dad | Default (tan blazer) | `dad.jpg` | Remove background |
 | Ollie | Default (navy hoodie) | `Ollie's Character.jpg` | Remove background |

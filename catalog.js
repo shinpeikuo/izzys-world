@@ -14,7 +14,7 @@ export function itemFile(kind) {
 // The people. Each look is a whole picture: art/characters/<id>_<look>.webp,
 // made by tools/prepare_characters.py. The first look is the one they start in.
 export const CHARACTERS = {
-  izzy: { looks: ['main', 'hiphop', 'mustache'] },
+  izzy: { looks: ['main', 'hiphop', 'mustache', 'princess'] },
   mom: { looks: ['default'] },
   dad: { looks: ['default'] },
   ollie: { looks: ['default'] },

@@ -27,6 +27,7 @@ LOOKS = {
     "izzy_main": ("Izzy Main Character.jpg", 400),
     "izzy_hiphop": ("hiphop izzy.jpg", 400),
     "izzy_mustache": ("mustache Izzy.jpg", 400),
+    "izzy_princess": ("princess Izzy.jpg", 422),  # taller because of the tiara
     "mom_default": ("mom.jpg", 500),
     "dad_default": ("dad.jpg", 520),
     "ollie_default": ("Ollie's Character.jpg", 440),
