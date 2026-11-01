@@ -1,0 +1,12 @@
+{
+ "cafe_round_table": [316, 252], "cafe_long_table": [960, 260], "cafe_coffee_machine": [1619, 238], "cafe_register": [1985, 244],
+ "cafe_grinder": [2286, 232], "cafe_blender": [2562, 234], "cafe_chair_pink": [198, 640], "cafe_chair_purple": [428, 636],
+ "cafe_chair_blue": [660, 640], "cafe_welcome_mat": [1069, 615], "cafe_coffee_pot": [1542, 559], "cafe_teapot_pink": [1735, 518],
+ "cafe_teapot_green": [1921, 496], "cafe_mug_pink": [2094, 485], "cafe_mug_yellow": [2235, 485], "cafe_cup_blue": [2388, 462],
+ "cafe_cup_cream": [2560, 462], "cafe_cup_red": [1728, 650], "cafe_cup_white": [1890, 649], "cafe_cup_small": [2037, 653],
+ "cafe_plates": [2188, 655], "cafe_water_jug": [2385, 622], "cafe_toaster": [2595, 617], "cafe_stool_dark": [194, 997],
+ "cafe_stool_wood": [411, 998], "cafe_stool_mint": [626, 997], "cafe_armchair": [1076, 968], "cafe_cake_stand": [1522, 889],
+ "cafe_cake": [1755, 913], "cafe_cupcakes": [2027, 852], "cafe_cookies": [2027, 998], "cafe_menu_board": [2302, 923],
+ "cafe_croissants": [2567, 974], "cafe_big_mat": [425, 1334], "cafe_bench": [1035, 1365], "cafe_cart": [1584, 1315],
+ "cafe_plant": [1874, 1295], "cafe_star_garland": [2434, 1181], "cafe_bread_basket": [2335, 1389], "cafe_menu_sign": [2585, 1369]
+}

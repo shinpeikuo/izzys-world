@@ -23,6 +23,15 @@ export const ITEM_SETTINGS = {
   living_hanging_plant: WALL, living_hanging_plant_small: WALL,
   bedroom_bear_shelf: WALL, bedroom_posters: WALL, bedroom_string_lights: WALL, bedroom_star_garland: WALL,
   kitchen_hanging_plant: WALL, kitchen_hanging_plants: WALL, kitchen_shelf_hooks: WALL, kitchen_hanging_rack: WALL,
+  cafe_welcome_mat: FLOOR, cafe_big_mat: FLOOR, cafe_star_garland: WALL,
+  castle_lobby_heart_rug: FLOOR, castle_lobby_chandelier: WALL, castle_lobby_banner_shield: WALL, castle_lobby_banner_knight: WALL,
+  castle_lobby_banner_ribbon: WALL, castle_lobby_banner_hanging: WALL, castle_lobby_key_board: WALL, castle_lobby_portrait: WALL,
+  castle_lobby_shield_yellow: WALL, castle_lobby_shield_red: WALL, castle_lobby_shield_white: WALL, castle_lobby_shield_crown: WALL,
+  castle_lobby_torch: WALL, castle_lobby_torch_2: WALL, castle_lobby_tapestry: WALL, castle_lobby_tapestry_purple: WALL,
+  castle_bedroom_heart_rug: FLOOR, castle_bedroom_oval_rug: FLOOR, castle_bedroom_banners: WALL, castle_bedroom_moon_garland: WALL,
+  castle_bedroom_bunting: WALL, castle_bedroom_frame: WALL, castle_bedroom_mirror: WALL, castle_bedroom_star_garland: WALL,
+  castle_dining_rug_purple: FLOOR, castle_dining_rug_pink: FLOOR, castle_dining_banner_heart: WALL, castle_dining_shield: WALL,
+  castle_dining_banner_pink: WALL, castle_dining_banner_star: WALL,
 };
 
 export function itemLayer(kind) {
@@ -35,8 +44,8 @@ export function itemScale(kind) {
 
 // The scene selector. hotspot: the part of the picture you tap to go to a place.
 export const PLACES = {
-  castle: { hotspot: [0, 0, 640, 1080], rooms: [] },  // rooms come after characters (build step 6)
-  cafe: { hotspot: [640, 0, 1280, 1080], rooms: [] },
+  castle: { hotspot: [0, 0, 640, 1080], rooms: ['castle_lobby', 'castle_bedroom', 'castle_dining'] },
+  cafe: { hotspot: [640, 0, 1280, 1080], rooms: ['cafe'] },
   house: { hotspot: [1280, 0, 1920, 1080], rooms: ['house_living', 'house_bedroom', 'house_kitchen'] },
 };
 
@@ -103,6 +112,103 @@ export const ROOMS = {
       ['kitchen_table', 1000, 860],
       ['kitchen_chair_yellow', 760, 870],
       ['kitchen_chair_pink', 1240, 870],
+    ],
+  },
+  cafe: {
+    place: 'cafe',
+    background: 'places/cafe_bg.webp',
+    ui: { gear: [80, 88], trash: [78, 995], box: [1845, 1008] },
+    items: [
+      'cafe_round_table', 'cafe_long_table', 'cafe_coffee_machine', 'cafe_register', 'cafe_grinder',
+      'cafe_blender', 'cafe_chair_pink', 'cafe_chair_purple', 'cafe_chair_blue', 'cafe_welcome_mat',
+      'cafe_coffee_pot', 'cafe_teapot_pink', 'cafe_teapot_green', 'cafe_mug_pink', 'cafe_mug_yellow',
+      'cafe_cup_blue', 'cafe_cup_cream', 'cafe_cup_red', 'cafe_cup_white', 'cafe_cup_small', 'cafe_plates',
+      'cafe_water_jug', 'cafe_toaster', 'cafe_stool_dark', 'cafe_stool_wood', 'cafe_stool_mint',
+      'cafe_armchair', 'cafe_cake_stand', 'cafe_cake', 'cafe_cupcakes', 'cafe_cookies', 'cafe_menu_board',
+      'cafe_croissants', 'cafe_big_mat', 'cafe_bench', 'cafe_cart', 'cafe_plant', 'cafe_star_garland',
+      'cafe_bread_basket', 'cafe_menu_sign'
+    ],
+    start: [
+      ['cafe_round_table', 700, 920],
+      ['cafe_chair_pink', 540, 930],
+      ['cafe_chair_blue', 860, 930],
+      ['cafe_coffee_machine', 1250, 690],
+      ['cafe_register', 1560, 690],
+      ['cafe_plant', 1820, 760],
+    ],
+  },
+  castle_lobby: {
+    place: 'castle',
+    background: 'places/castle_lobby_bg.webp',
+    ui: { gear: [85, 88], trash: [90, 985], box: [1850, 1010] },
+    items: [
+      'castle_lobby_throne', 'castle_lobby_sofa', 'castle_lobby_chair_crown', 'castle_lobby_chair_pink',
+      'castle_lobby_chair_star', 'castle_lobby_chair_purple', 'castle_lobby_chandelier',
+      'castle_lobby_banner_shield', 'castle_lobby_banner_knight', 'castle_lobby_banner_ribbon',
+      'castle_lobby_guest_book', 'castle_lobby_key_board', 'castle_lobby_desk', 'castle_lobby_box',
+      'castle_lobby_knight', 'castle_lobby_shield_yellow', 'castle_lobby_shield_red',
+      'castle_lobby_shield_white', 'castle_lobby_shield_crown', 'castle_lobby_grandfather_clock',
+      'castle_lobby_banner_hanging', 'castle_lobby_portrait', 'castle_lobby_candelabra',
+      'castle_lobby_candelabra_small', 'castle_lobby_torch', 'castle_lobby_torch_2',
+      'castle_lobby_treasure_chest', 'castle_lobby_crown', 'castle_lobby_crown_heart', 'castle_lobby_tiara',
+      'castle_lobby_tiara_purple', 'castle_lobby_heart_rug', 'castle_lobby_tapestry',
+      'castle_lobby_tapestry_purple', 'castle_lobby_plant', 'castle_lobby_plant_2', 'castle_lobby_flower_vase'
+    ],
+    start: [
+      ['castle_lobby_heart_rug', 960, 1010],
+      ['castle_lobby_throne', 420, 920],
+      ['castle_lobby_knight', 700, 860],
+      ['castle_lobby_grandfather_clock', 1250, 820],
+      ['castle_lobby_plant', 1350, 900],
+    ],
+  },
+  castle_bedroom: {
+    place: 'castle',
+    background: 'places/castle_bedroom_bg.webp',
+    ui: { gear: [90, 85], trash: [90, 990], box: [1850, 1005] },
+    items: [
+      'castle_bedroom_canopy_bed', 'castle_bedroom_wardrobe', 'castle_bedroom_throne',
+      'castle_bedroom_vanity', 'castle_bedroom_chair', 'castle_bedroom_daybed', 'castle_bedroom_desk',
+      'castle_bedroom_stool', 'castle_bedroom_nightstand', 'castle_bedroom_chest', 'castle_bedroom_bookshelf',
+      'castle_bedroom_banners', 'castle_bedroom_moon_garland', 'castle_bedroom_bunting',
+      'castle_bedroom_plant', 'castle_bedroom_frame', 'castle_bedroom_mirror', 'castle_bedroom_star_garland',
+      'castle_bedroom_heart_rug', 'castle_bedroom_oval_rug', 'castle_bedroom_tulips',
+      'castle_bedroom_flower_vase', 'castle_bedroom_pet_bed', 'castle_bedroom_book', 'castle_bedroom_scroll',
+      'castle_bedroom_quill', 'castle_bedroom_lantern', 'castle_bedroom_tiara', 'castle_bedroom_crown',
+      'castle_bedroom_tiara_gold', 'castle_bedroom_crown_2', 'castle_bedroom_map',
+      'castle_bedroom_knight_toy', 'castle_bedroom_dragon', 'castle_bedroom_unicorn'
+    ],
+    start: [
+      ['castle_bedroom_oval_rug', 980, 990],
+      ['castle_bedroom_canopy_bed', 740, 880],
+      ['castle_bedroom_chest', 1150, 930],
+      ['castle_bedroom_chair', 420, 900],
+      ['castle_bedroom_dragon', 1000, 1000],
+    ],
+  },
+  castle_dining: {
+    place: 'castle',
+    background: 'places/castle_dining_bg.webp',
+    ui: { gear: [85, 88], trash: [90, 990], box: [1850, 1010] },
+    items: [
+      'castle_dining_long_table', 'castle_dining_throne_pink', 'castle_dining_throne_lilac',
+      'castle_dining_chair_pink', 'castle_dining_chair_purple', 'castle_dining_sideboard',
+      'castle_dining_cart', 'castle_dining_harp', 'castle_dining_music_stand', 'castle_dining_cake_stand',
+      'castle_dining_plates', 'castle_dining_roses', 'castle_dining_goblet', 'castle_dining_teapot',
+      'castle_dining_rose_bowl', 'castle_dining_candelabra', 'castle_dining_bowl',
+      'castle_dining_goblet_purple', 'castle_dining_tea_set', 'castle_dining_cutlery', 'castle_dining_teacup',
+      'castle_dining_spoons', 'castle_dining_lute', 'castle_dining_cabinet', 'castle_dining_chair_2',
+      'castle_dining_chair_3', 'castle_dining_cupcake', 'castle_dining_feast', 'castle_dining_cake',
+      'castle_dining_pie', 'castle_dining_banner_heart', 'castle_dining_shield', 'castle_dining_banner_pink',
+      'castle_dining_banner_star', 'castle_dining_jelly', 'castle_dining_cakes', 'castle_dining_fruit_bowl',
+      'castle_dining_bread', 'castle_dining_rug_purple', 'castle_dining_rug_pink'
+    ],
+    start: [
+      ['castle_dining_rug_purple', 960, 990],
+      ['castle_dining_throne_pink', 960, 860],
+      ['castle_dining_long_table', 960, 960],
+      ['castle_dining_chair_pink', 560, 980],
+      ['castle_dining_chair_purple', 1360, 980],
     ],
   },
 };

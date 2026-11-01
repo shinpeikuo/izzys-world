@@ -1,0 +1,14 @@
+{
+ "castle_lobby_throne": [222, 288], "castle_lobby_sofa": [687, 329], "castle_lobby_chair_crown": [1066, 301], "castle_lobby_chair_pink": [1260, 287],
+ "castle_lobby_chair_star": [1458, 288], "castle_lobby_chair_purple": [1661, 328], "castle_lobby_chandelier": [1989, 244],
+ "castle_lobby_banner_shield": [2260, 229], "castle_lobby_banner_knight": [2448, 218], "castle_lobby_banner_ribbon": [2631, 229],
+ "castle_lobby_guest_book": [494, 623], "castle_lobby_key_board": [990, 705], "castle_lobby_desk": [429, 880], "castle_lobby_box": [940, 960],
+ "castle_lobby_knight": [1452, 776], "castle_lobby_shield_yellow": [1677, 651], "castle_lobby_shield_red": [1859, 649],
+ "castle_lobby_shield_white": [1677, 879], "castle_lobby_shield_crown": [1858, 874], "castle_lobby_grandfather_clock": [2039, 777],
+ "castle_lobby_banner_hanging": [2229, 558], "castle_lobby_portrait": [2516, 559], "castle_lobby_candelabra": [2231, 886],
+ "castle_lobby_candelabra_small": [2406, 886], "castle_lobby_torch": [2531, 873], "castle_lobby_torch_2": [2656, 874],
+ "castle_lobby_treasure_chest": [252, 1305], "castle_lobby_crown": [586, 1210], "castle_lobby_crown_heart": [807, 1215],
+ "castle_lobby_tiara": [587, 1373], "castle_lobby_tiara_purple": [807, 1371], "castle_lobby_heart_rug": [1430, 1288],
+ "castle_lobby_tapestry": [1895, 1174], "castle_lobby_tapestry_purple": [1889, 1382], "castle_lobby_plant": [2218, 1308],
+ "castle_lobby_plant_2": [2429, 1308], "castle_lobby_flower_vase": [2621, 1263]
+}

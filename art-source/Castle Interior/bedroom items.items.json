@@ -1,0 +1,13 @@
+{
+ "castle_bedroom_canopy_bed": [458, 445], "castle_bedroom_wardrobe": [2352, 361], "castle_bedroom_throne": [1315, 342], "castle_bedroom_vanity": [1736, 383],
+ "castle_bedroom_chair": [1010, 372], "castle_bedroom_daybed": [1167, 718], "castle_bedroom_desk": [1727, 792], "castle_bedroom_stool": [1728, 870],
+ "castle_bedroom_nightstand": [2084, 802], "castle_bedroom_chest": [2320, 819], "castle_bedroom_bookshelf": [2568, 791],
+ "castle_bedroom_banners": [236, 1009], "castle_bedroom_moon_garland": [534, 1045], "castle_bedroom_bunting": [816, 943],
+ "castle_bedroom_plant": [1342, 991], "castle_bedroom_frame": [759, 1126], "castle_bedroom_mirror": [957, 1116],
+ "castle_bedroom_star_garland": [260, 1185], "castle_bedroom_heart_rug": [327, 1359], "castle_bedroom_oval_rug": [821, 1360],
+ "castle_bedroom_tulips": [1242, 1275], "castle_bedroom_flower_vase": [1471, 1297], "castle_bedroom_pet_bed": [1728, 1398],
+ "castle_bedroom_book": [1797, 1154], "castle_bedroom_scroll": [1952, 1156], "castle_bedroom_quill": [2089, 1140],
+ "castle_bedroom_lantern": [2226, 1136], "castle_bedroom_tiara": [2402, 1048], "castle_bedroom_crown": [2594, 1049],
+ "castle_bedroom_tiara_gold": [2402, 1174], "castle_bedroom_crown_2": [2593, 1174], "castle_bedroom_map": [1999, 1383],
+ "castle_bedroom_knight_toy": [2179, 1361], "castle_bedroom_dragon": [2380, 1365], "castle_bedroom_unicorn": [2591, 1361]
+}
