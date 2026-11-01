@@ -1,0 +1,13 @@
+{
+ "kitchen_hanging_plant": [2326, 199], "kitchen_hanging_plants": [2530, 250], "kitchen_fridge": [1486, 380], "kitchen_pot": [1784, 178],
+ "kitchen_chair_blue": [179, 264], "kitchen_chair_yellow": [963, 264], "kitchen_chair_pink": [1189, 264], "kitchen_table": [565, 280],
+ "kitchen_pan": [2037, 211], "kitchen_mugs": [2222, 350], "kitchen_bowls": [2074, 353], "kitchen_stove": [1818, 496],
+ "kitchen_blender": [2600, 556], "kitchen_stool_mint": [479, 592], "kitchen_stool_pink": [687, 592], "kitchen_microwave": [2153, 565],
+ "kitchen_bench": [1066, 593], "kitchen_toaster": [2417, 585], "kitchen_pantry": [224, 858], "kitchen_utensil_jar": [2606, 783],
+ "kitchen_cupboard": [1079, 957], "kitchen_cooking_tools": [2439, 785], "kitchen_spoon_fork": [2202, 794], "kitchen_cutlery": [1537, 819],
+ "kitchen_plate": [1368, 825], "kitchen_bowl_stack": [1917, 821], "kitchen_cup_saucer": [1758, 827], "kitchen_bar_stool": [519, 1009],
+ "kitchen_bar_stool_pink": [758, 1020], "kitchen_round_table": [1820, 1088], "kitchen_cart": [1466, 1082], "kitchen_shelf_hooks": [2494, 992],
+ "kitchen_hanging_rack": [2148, 1136], "kitchen_bread_bag": [2469, 1175], "kitchen_coffee_bag": [2604, 1176], "kitchen_footstool": [1422, 1359],
+ "kitchen_rug": [896, 1364], "kitchen_cereal_green": [2460, 1367], "kitchen_cereal_red": [2609, 1376], "kitchen_milk": [1871, 1379],
+ "kitchen_fruit_veg": [2248, 1392], "kitchen_pet_bowl": [393, 1406], "kitchen_bread": [1711, 1413], "kitchen_eggs": [2016, 1414]
+}

@@ -5,3 +5,6 @@ _source-photos/
 tools/__pycache__/
 .DS_Store
 Thumbs.db
+
+# Previews made by tools/cut_sheet.py find
+art-source/**/*.found.png

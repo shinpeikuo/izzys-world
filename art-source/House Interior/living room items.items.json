@@ -1,0 +1,9 @@
+{
+ "living_sofa": [496, 314], "living_armchair": [1120, 316], "living_beanbag": [1509, 335], "living_footstool": [911, 581],
+ "living_tv": [2204, 312], "living_side_table": [2562, 429], "living_bookshelf": [236, 1081], "living_cabinet": [550, 1104],
+ "living_desk": [874, 1255], "living_cloud_lamp": [1222, 1082], "living_hanging_plant": [1449, 868], "living_fern": [1418, 1244],
+ "living_guitar": [1709, 916], "living_hanging_plant_small": [1847, 800], "living_potted_plant": [1989, 791], "living_cushions": [2172, 820],
+ "living_clock": [2459, 726], "living_picture": [2616, 721], "living_tissues": [2383, 856], "living_frame": [2526, 844],
+ "living_mirror": [2625, 831], "living_rug": [2149, 1024], "living_toy_basket": [2582, 1013], "living_game_console": [1800, 1335],
+ "living_controller": [2062, 1348], "living_board_games": [2320, 1332], "living_books": [2578, 1328]
+}

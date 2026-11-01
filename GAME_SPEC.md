@@ -48,14 +48,18 @@ Izzy's World is an open-ended, creative play game inspired by Toca Boca. Players
 
 Pets can be dragged, placed, and tapped for a sound and reaction.
 
-### 4.3 Places (3)
-| Place | Setting type | Suggested props |
-|---|---|---|
-| **House** | Family home | Bed, couch, table and chairs, TV, lamp, fridge, pictures, rug |
-| **Café** | Town | Counter, café tables and chairs, cups, pastries, menu board, coffee machine |
-| **Castle** | Fantasy | Throne, banners, chandelier, chest, crowns, torches |
+### 4.3 Places (3) and rooms (7)
+*Updated 2026-11-01 to match Shinpei's art: places now contain rooms.*
 
-Players move between places using a simple map or a row of place buttons. Characters and items can be carried from one place to another.
+| Place | Rooms | Setting type | Suggested props |
+|---|---|---|---|
+| **House** | Living room, bedroom, kitchen | Family home | Bed, couch, table and chairs, TV, lamp, fridge, pictures, rug |
+| **Café** | Café (one room) | Town | Counter, café tables and chairs, cups, pastries, menu board, coffee machine |
+| **Castle** | Lobby, bedroom, dining hall | Fantasy | Throne, banners, chandelier, chest, crowns, torches |
+
+**Getting around:** the game opens on the **scene selector** (the main world picture with the castle, café and house). Tapping a building goes into that place. Inside a place, **arrows at the left and right edges** move between its rooms, and a map button goes back to the scene selector. Characters and items can be carried from one room or place to another.
+
+Each room starts with a few starter pieces of furniture. Everything else comes from that room's item box. Room art and item sheets are in `art-source/`.
 
 ### 4.4 Interactions (all in V1)
 1. **Drag and place:** move characters, pets, and items anywhere in a room.
@@ -107,6 +111,6 @@ All art goes in the `art/` folder using the names below, so Claude Code can find
 3. House scene with placeholder art: drag-and-drop, item drawer.
 4. Characters and outfit swapping using the real family art.
 5. Sit and hold mechanics, tap reactions.
-6. Café and castle, travel between places.
+6. Café and castle rooms (scene selector, house rooms and room arrows were done early, before step 4).
 7. Pets, sound, music, mute toggles.
 8. Polish and test on Izzy's tablet: touch target sizes, performance, offline mode, update without losing the save.

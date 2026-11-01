@@ -2,31 +2,15 @@ import { createSaver, NewerSaveError, NotABackupError } from './save.js';
 import { startGame } from './game.js';
 
 // Set with: python tools/release.py 1.2.3 (keeps sw.js in step).
-const VERSION = '0.3.0';
+const VERSION = '0.4.0';
 
 const $ = (id) => document.getElementById(id);
-$('version').textContent = 'v' + VERSION;
 $('panel-version').textContent = VERSION;
 
 const saver = createSaver(VERSION);
 let game = null;
 
-// --- Grown-up area: press and hold the gear for 2 seconds ---
-
-const gear = $('gear');
-let holdTimer = null;
-gear.addEventListener('pointerdown', (e) => {
-  gear.setPointerCapture(e.pointerId);
-  gear.classList.add('holding');
-  holdTimer = setTimeout(() => { stopHold(); openPanel(); }, 2000);
-});
-function stopHold() {
-  clearTimeout(holdTimer);
-  gear.classList.remove('holding');
-}
-gear.addEventListener('pointerup', stopHold);
-gear.addEventListener('pointercancel', stopHold);
-gear.addEventListener('contextmenu', (e) => e.preventDefault());
+// --- Grown-up area: opened by holding the gear in the game for 2 seconds ---
 
 function showMessage(text, kind = '') {
   const el = $('panel-message');
@@ -76,7 +60,7 @@ $('confirm-yes').addEventListener('click', async () => {
   $('confirm').hidden = true;
   try {
     await saver.replaceWorld(pendingWorld);
-    game.scene.getScene('place').scene.restart();
+    game.scene.getScenes(true).forEach((scene) => scene.scene.start('boot'));
     showMessage('Backup loaded ✓', 'ok');
   } catch {
     showMessage('Could not load the backup. The world was not changed.', 'error');
@@ -87,7 +71,8 @@ $('confirm-yes').addEventListener('click', async () => {
 // --- Start up ---
 
 await saver.load();
-game = startGame(saver);
+game = startGame(saver, openPanel);
+if (location.hostname === 'localhost') window.izzy = { game, saver }; // for testing on the computer only
 saver.requestPersist();
 
 // --- Service worker: makes the app work offline and handles updates ---
@@ -98,7 +83,7 @@ const pageOpenedAt = performance.timeOrigin;
 const FRESH_LAUNCH_MS = 10000;
 
 function showOfflineReady() {
-  $('offline').textContent = '✓ offline';
+  $('offline').textContent = 'ready to play offline';
 }
 
 if ('serviceWorker' in navigator) {

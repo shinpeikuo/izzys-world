@@ -43,9 +43,14 @@
     try { migrate(wrap(SAVE_VERSION + 1, {})); return false; } catch (e) { return e instanceof NewerSaveError; }
   });
 
-  check('v1 hello-page save upgrades to an empty house world', () => {
+  check('v1 hello-page save upgrades to the current version', () => {
     const r = migrate(wrap(1, { star: { x: 0.2, y: 0.8 } }));
-    return r.saveVersion === SAVE_VERSION && r.world.place === 'house' && Object.keys(r.world.places).length === 0 && !('star' in r.world);
+    return r.saveVersion === SAVE_VERSION && r.world.screen === 'world' && Object.keys(r.world.rooms).length === 0;
+  });
+
+  check('v2 placeholder house save upgrades to the scene selector', () => {
+    const r = migrate(wrap(2, { place: 'house', places: { house: { items: [{ id: 'a', kind: 'house_bed', x: 1, y: 2 }] } } }));
+    return r.saveVersion === SAVE_VERSION && r.world.screen === 'world' && Object.keys(r.world.rooms).length === 0;
   });
 
   check('a missing migration is an error, not a silent wipe', () => {

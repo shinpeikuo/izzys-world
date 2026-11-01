@@ -1,0 +1,9 @@
+{
+ "bedroom_bed": [455, 287], "bedroom_bunk_bed": [2341, 375], "bedroom_vanity": [1721, 313], "bedroom_desk": [1164, 397],
+ "bedroom_stool": [1714, 523], "bedroom_wardrobe": [309, 824], "bedroom_bookshelf": [731, 831], "bedroom_bear_shelf": [1100, 714],
+ "bedroom_dollhouse": [1662, 747], "bedroom_teddy": [1425, 760], "bedroom_dino": [1900, 773], "bedroom_unicorn": [2101, 799],
+ "bedroom_unicorn_big": [2299, 811], "bedroom_board_games": [2548, 819], "bedroom_toy_chest": [1099, 967], "bedroom_string_lights": [1996, 981],
+ "bedroom_posters": [1566, 1063], "bedroom_star_garland": [2446, 1005], "bedroom_cloud_lamp": [1886, 1117], "bedroom_bed_small": [401, 1289],
+ "bedroom_computer": [2231, 1284], "bedroom_books": [2583, 1217], "bedroom_pencils": [2445, 1242], "bedroom_toy_box": [934, 1316],
+ "bedroom_star_rug": [1709, 1337], "bedroom_nightstand": [1271, 1328], "bedroom_notebooks": [2572, 1390]
+}

@@ -13,12 +13,6 @@
 <body>
   <main id="game"></main>
 
-  <!-- Grown-up area: press and hold the gear for 2 seconds to open -->
-  <button id="gear" class="gear" aria-label="Grown-ups">
-    <svg class="gear-ring" viewBox="0 0 64 64"><circle cx="32" cy="32" r="29" /></svg>
-    <span>⚙</span>
-  </button>
-
   <div id="grownups" class="panel-backdrop" hidden>
     <div class="panel">
       <button id="close-panel" class="close" aria-label="Close">✕</button>
@@ -33,6 +27,7 @@
         <dt>Last backup</dt><dd id="last-backup">never</dd>
         <dt>Storage</dt><dd id="storage-status">…</dd>
         <dt>Version</dt><dd id="panel-version"></dd>
+        <dt>Offline</dt><dd id="offline">not yet</dd>
       </dl>
       <p class="panel-note">Clearing Chrome data or uninstalling the app erases the world. Save a backup now and then, and keep the file somewhere safe (Google Drive, email).</p>
     </div>
@@ -53,12 +48,6 @@
   <div id="rotate" aria-hidden="true">
     <div class="rotate-icon">📱↻</div>
   </div>
-
-  <!-- Small grown-up info in the corner: version and offline status -->
-  <footer id="status">
-    <span id="version"></span>
-    <span id="offline"></span>
-  </footer>
 
   <script src="vendor/phaser.min.js"></script>
   <script type="module" src="app.js"></script>

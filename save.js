@@ -5,22 +5,23 @@
 // When the shape of the world changes in an update, bump SAVE_VERSION and add a
 // migration that upgrades the old shape, so existing worlds keep working.
 
-export const SAVE_VERSION = 2;
+export const SAVE_VERSION = 3;
 const FORMAT = 'izzys-world-save';
 const DB_NAME = 'izzys-world';
 const STORE = 'kv';
 const WORLD_KEY = 'world';
 const META_KEY = 'meta';
 
-// A brand new world. A place that is not in `places` yet gets its starting
-// furniture the first time it is shown, so adding a new place needs no migration.
+// A brand new world. A room that is not in `rooms` yet gets its starter
+// furniture the first time it is shown, so adding a new room needs no migration.
 //
-// places.<id>.items: [{ id, kind, x, y }] where kind is a catalog id and x, y
+// screen: 'world' (the scene selector) or a room id such as 'house_living'.
+// rooms.<id>.items: [{ id, kind, x, y }] where kind is a catalog id and x, y
 // are the item's bottom-middle point in room pixels (1920 x 1080).
 export function newWorld() {
   return {
-    place: 'house',
-    places: {},
+    screen: 'world',
+    rooms: {},
   };
 }
 
@@ -29,6 +30,10 @@ export function newWorld() {
 export const MIGRATIONS = {
   // v1 (hello page: a draggable star) -> v2 (places with furniture)
   1: () => ({ place: 'house', places: {} }),
+  // v2 (one house room with placeholder furniture) -> v3 (scene selector and rooms
+  // with real art). The placeholder furniture is not carried over; the untouched
+  // v2 save is kept on the device as 'pre-migration-v2'.
+  2: () => ({ screen: 'world', rooms: {} }),
 };
 
 export class NewerSaveError extends Error {}
