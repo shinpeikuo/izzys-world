@@ -27,6 +27,62 @@ export function lookFile(id, look) {
   return 'characters/' + id + '_' + look + '.webp';
 }
 
+// Where each look's free hand is, and where the legs start (for sitting), as fractions
+// of the picture from its top-left corner. Looks not listed use DEFAULT_BODY.
+const DEFAULT_BODY = { hand: [0.86, 0.61], hip: 0.58 };
+const BODIES = {
+  izzy_hiphop: { hand: [0.75, 0.33], hip: 0.55 },
+  izzy_princess: { hand: [0.33, 0.53], hip: 0.55 },
+  dad_default: { hand: [0.9, 0.6], hip: 0.56 },
+};
+
+export function body(id, look) {
+  return BODIES[id + '_' + look] || DEFAULT_BODY;
+}
+
+// Furniture people can sit or lie on.
+// [pose, seat height as a fraction of the item's height from the bottom, number of spots]
+export const SEATS = {
+  living_sofa: ['sit', 0.38, 3], living_armchair: ['sit', 0.4], living_beanbag: ['sit', 0.5], living_footstool: ['sit', 0.9],
+  bedroom_bed: ['lie', 0.45], bedroom_bed_small: ['lie', 0.45], bedroom_bunk_bed: ['lie', 0.28], bedroom_stool: ['sit', 0.9],
+  kitchen_bar_stool: ['sit', 0.92], kitchen_bar_stool_pink: ['sit', 0.92], kitchen_bench: ['sit', 0.85, 2],
+  kitchen_chair_blue: ['sit', 0.45], kitchen_chair_pink: ['sit', 0.45], kitchen_chair_yellow: ['sit', 0.45],
+  kitchen_footstool: ['sit', 0.85], kitchen_stool_mint: ['sit', 0.9], kitchen_stool_pink: ['sit', 0.9],
+  cafe_armchair: ['sit', 0.4], cafe_bench: ['sit', 0.7, 2], cafe_chair_blue: ['sit', 0.42], cafe_chair_pink: ['sit', 0.42],
+  cafe_chair_purple: ['sit', 0.42], cafe_stool_dark: ['sit', 0.95], cafe_stool_mint: ['sit', 0.95], cafe_stool_wood: ['sit', 0.95],
+  castle_lobby_sofa: ['sit', 0.42, 2], castle_lobby_throne: ['sit', 0.33], castle_lobby_chair_crown: ['sit', 0.38],
+  castle_lobby_chair_pink: ['sit', 0.36], castle_lobby_chair_purple: ['sit', 0.42], castle_lobby_chair_star: ['sit', 0.36],
+  castle_bedroom_canopy_bed: ['lie', 0.3], castle_bedroom_chair: ['sit', 0.4], castle_bedroom_daybed: ['lie', 0.5],
+  castle_bedroom_stool: ['sit', 0.9], castle_bedroom_throne: ['sit', 0.33],
+  castle_dining_chair_2: ['sit', 0.4], castle_dining_chair_3: ['sit', 0.4], castle_dining_chair_pink: ['sit', 0.4],
+  castle_dining_chair_purple: ['sit', 0.4], castle_dining_throne_lilac: ['sit', 0.33], castle_dining_throne_pink: ['sit', 0.33],
+};
+
+// Items smaller than this (in room pixels) can be held by dropping them on a hand.
+export const HOLD_MAX = 170;
+
+// What happens when an item is tapped (anything not listed gives a little wiggle).
+// light: switches a glow on and off at `at` (fractions of the item from its top-left).
+// screen: switches a screen on and off; `rect` is [left, top, right, bottom] fractions.
+// steam: puffs of steam rise from `at`.
+export const REACTIONS = {
+  living_cloud_lamp: { light: true, at: [0.5, 0.1], r: 110 },
+  bedroom_cloud_lamp: { light: true, at: [0.5, 0.25], r: 90 },
+  bedroom_string_lights: { light: true, at: [0.5, 0.45], r: 140 },
+  castle_bedroom_lantern: { light: true, at: [0.5, 0.6], r: 70 },
+  castle_lobby_candelabra: { light: true, at: [0.5, 0.2], r: 90 },
+  castle_lobby_candelabra_small: { light: true, at: [0.5, 0.2], r: 80 },
+  castle_dining_candelabra: { light: true, at: [0.5, 0.2], r: 80 },
+  castle_lobby_torch: { light: true, at: [0.5, 0.1], r: 70 },
+  castle_lobby_torch_2: { light: true, at: [0.5, 0.1], r: 70 },
+  castle_lobby_chandelier: { light: true, at: [0.5, 0.7], r: 170 },
+  living_tv: { screen: true, rect: [0.12, 0.03, 0.88, 0.47] },
+  bedroom_computer: { screen: true, rect: [0.08, 0.04, 0.92, 0.5] },
+  cafe_coffee_machine: { steam: true, at: [0.33, 0.68] },
+  cafe_coffee_pot: { steam: true, at: [0.5, 0.1] },
+  kitchen_stove: { steam: true, at: [0.5, 0.05] },
+};
+
 // Items are cut from the sheets at room size, so most need no settings.
 // layer: 'stand' (default) = stands in the room; things lower on screen are in front.
 //        'floor' = always underneath (rugs). 'wall' = hangs on the wall.

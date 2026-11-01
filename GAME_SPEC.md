@@ -70,6 +70,8 @@ Each room starts with a few starter pieces of furniture. Everything else comes f
 4. **Tap for reactions:** lights switch on and off, the TV turns on, pets make sounds, the coffee machine animates.
 5. **Decorate:** an item drawer for each place lets players add, move, and remove furniture and decorations.
 
+*Built 2026-11-01:* sitting uses the standing art with the legs drawn shorter, as if bent towards you; beds lay the person down with their head on the pillow. A person holds one item at a time; dropping a new one on their hand swaps it and the old one falls to the floor. Lamps, candles, torches and the chandelier glow when switched on; the TV and computer show a simple moving picture; the coffee machine, coffee pot and stove puff steam. Lights and screens stay on in the save.
+
 ### 4.5 Sound
 - Sound effects for taps, pickup and drop, pet sounds, and object reactions.
 - Background music for each place.

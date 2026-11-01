@@ -18,8 +18,11 @@ const META_KEY = 'meta';
 // screen: 'world' (the scene selector) or a room id such as 'house_living'.
 // rooms.<id>.items: [{ id, kind, x, y }] where kind is a catalog id and x, y
 // are the item's bottom-middle point in room pixels (1920 x 1080).
+// An item can also have on: true (a lamp or TV that is switched on).
 // characters.<id>: { look, room, x, y } where id and look come from CHARACTERS in
 // catalog.js, and room is null while the character is waiting in the people drawer.
+// Optional: seat: { item, spot } (sitting on that item in their room) and
+// holding: { kind } (an item in their hand, which travels with them).
 export function newWorld() {
   return {
     screen: 'world',

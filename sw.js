@@ -1,6 +1,6 @@
 // Set the version with: python tools/release.py 1.2.3 (also updates app.js).
 // That is what tells tablets there is an update to download.
-const VERSION = '0.6.1';
+const VERSION = '0.7.0';
 const CACHE = 'izzys-world-' + VERSION;
 
 // Every file the game needs to run offline. Filled in by tools/release.py.
