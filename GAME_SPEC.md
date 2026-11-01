@@ -151,12 +151,23 @@ Every look also needs a lying-down picture for beds. *Done 2026-11-01: all 10 ar
 ### 6.3 Pet pictures (requested 2026-11-01)
 The dog, cat and peacock use simple stand-in drawings until real pet art exists.
 
-**Prompt:**
-> A cute cartoon [dog / cat / peacock] in the same style and colors as the family characters. Full body, standing (the dog and cat can be sitting), facing forward, happy expression. Plain white background. Nothing else in the picture. The peacock has its tail fanned out.
+**Give the image tool a style reference:** attach one of the finished character pictures (for example `Izzy Main Character.jpg`) and say it is for style only.
 
-**Checklist:** facing forward, whole body in frame, plain white background, no shadow, one animal per picture.
+**Prompts** (one picture per pet):
+> **Dog:** Using the attached picture only as a style reference, draw a cute cartoon puppy in exactly the same art style: same thick dark outlines, same soft shading and colors, same big shiny eyes. Full body, sitting, facing forward, happy face with its tongue out. Plain white background. No people, no shadow, nothing else in the picture.
 
-**File names:** `art-source/Pets/dog.jpg`, `art-source/Pets/cat.jpg`, `art-source/Pets/peacock.jpg`. Pets aren't family photos, so they can go in the repository with the other art.
+> **Cat:** Using the attached picture only as a style reference, draw a cute cartoon kitten in exactly the same art style: same thick dark outlines, same soft shading and colors, same big shiny eyes. Full body, sitting, facing forward, tail curled beside it, happy face. Plain white background. No people, no shadow, nothing else in the picture.
+
+> **Peacock:** Using the attached picture only as a style reference, draw a cute cartoon peacock in exactly the same art style: same thick dark outlines, same soft shading and colors, same big shiny eyes. Full body, standing, facing forward, tail fanned out wide behind it, happy face. Plain white background. No people, no shadow, nothing else in the picture.
+
+**Checklist for each picture**
+- Same style as the family characters (outlines, shading, big eyes). If it looks like a different cartoon, try again.
+- Facing forward, whole animal in frame with a little white space around it, including the peacock's whole tail.
+- Plain white background, no shadow, no ground, one animal per picture.
+- Any size and shape is fine; Claude scales them to fit (dog about half as tall as Izzy, cat a bit smaller, peacock a bit taller than the dog).
+- You can pick your own breed or colors, for example a pet that looks like one you know.
+
+**File names:** `art-source/Pets/dog.jpg`, `art-source/Pets/cat.jpg`, `art-source/Pets/peacock.jpg` (create the `Pets` folder). Pets aren't family photos, so they can go in the repository with the other art.
 
 ## 7. Open decisions
 | # | Decision | Options / notes |
