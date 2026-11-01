@@ -13,7 +13,7 @@ SRC = ROOT / "art-source"
 ART = ROOT / "art"
 
 BACKGROUNDS = {
-    "places/world_bg.webp": "Main World scene selector/Main world scene selector-page.jpg",
+    "places/world_bg.webp": "Main World scene selector/main scene selector (sunset).jpg",
     "places/house_living_bg.webp": "House Interior/living room interior.jpg",
     "places/house_bedroom_bg.webp": "House Interior/bedroom interior.jpg",
     "places/house_kitchen_bg.webp": "House Interior/kitchen interior.jpg",
