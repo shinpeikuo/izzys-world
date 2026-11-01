@@ -35,6 +35,8 @@ Izzy's World is an open-ended, creative play game inspired by Toca Boca. Players
 | Dad | Default (tan blazer) | `dad.jpg` | Remove background |
 | Ollie | Default (navy hoodie) | `Ollie's Character.jpg` | Remove background |
 
+**Friend characters with art started** (confirmed by Shinpei 2026-11-01): Caden (`Caden.jpg`), Jane (`Jane.jpg`), Syd (`syd.jpg`). Each needs its background removed. Source photos live in `_source-photos/`.
+
 **Preset friend characters:** 4–6 generic kids with a variety of looks, made in the same cartoon style. Players can rename them using a short name field.
 
 **Dress-up = outfit swaps.** Each look is a complete full-body image. A character's outfit picker shows that character's looks as thumbnails, and tapping one switches the look. (Mix-and-match layered clothing is deferred to V2.)
