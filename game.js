@@ -15,6 +15,8 @@ const HOLD_MS = 2000;    // press and hold the gear this long to open the grown-
 const BUTTON_R = 75;     // touch radius of the round buttons
 const SIT_SQUASH = 0.4;  // sitting: the legs are drawn this much shorter, as if bent towards you
 const HAND_REACH = 80;   // an item dropped this close to a hand is held
+const SMALL_ITEM = 110;  // items smaller than this get a bigger touch area around them
+const SMALL_PAD = 30;
 
 // onGrownups: called when the gear has been held long enough.
 export function startGame(saver, onGrownups) {
@@ -28,6 +30,7 @@ export function startGame(saver, onGrownups) {
     banner: false,
     scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
     input: { activePointers: 4 }, // several fingers can drag at once
+    disableContextMenu: true,     // no long-press menu on the tablet
     scene: [new BootScene(saver), new WorldScene(saver, onGrownups), new RoomScene(saver, onGrownups)],
   });
 }
@@ -269,7 +272,14 @@ class RoomScene extends Phaser.Scene {
 
   addItemSprite(item) {
     const sprite = this.add.image(item.x, item.y, item.kind).setOrigin(0.5, 1).setScale(itemScale(item.kind));
-    sprite.setInteractive({ pixelPerfect: true, alphaTolerance: 1 });
+    if (Math.max(sprite.displayWidth, sprite.displayHeight) < SMALL_ITEM) {
+      // Tiny things (a cup, a fork) are hard for small fingers: touch anywhere close by.
+      const pad = SMALL_PAD / sprite.scaleX;
+      const area = new Phaser.Geom.Rectangle(-pad, -pad, sprite.width + 2 * pad, sprite.height + 2 * pad);
+      sprite.setInteractive(area, Phaser.Geom.Rectangle.Contains);
+    } else {
+      sprite.setInteractive({ pixelPerfect: true, alphaTolerance: 1 });
+    }
     sprite.setData('item', item);
     this.restDepth(sprite);
     this.itemSprites[item.id] = sprite;

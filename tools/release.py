@@ -6,6 +6,7 @@ It does three things:
   3. Writes assets.js, which tells the game which real art exists in art/.
      Anything not there yet uses the matching file in placeholder/.
 """
+import hashlib
 import json
 import re
 import sys
@@ -50,16 +51,24 @@ def main():
 
     js = sorted(p.name for p in ROOT.glob("*.js") if p.name != "sw.js")
     files = ["./"] + ROOT_FILES + js + [f for folder in FOLDERS for f in media_in(folder)]
-    listing = "const FILES = [\n" + "".join(f"  {json.dumps(f)},\n" for f in files) + "];"
+
+    # app.js gets the new version number first, because it is fingerprinted below.
+    app = (ROOT / "app.js").read_text(encoding="utf-8")
+    app = re.sub(r"const VERSION = '[^']*';", f"const VERSION = '{version}';", app)
+    (ROOT / "app.js").write_text(app, encoding="utf-8")
+
+    # Each file name gets ?v=<fingerprint of its contents>, so tablets only download
+    # files that changed since the version they already have.
+    def fingerprint(f):
+        data = (ROOT / ("index.html" if f == "./" else f)).read_bytes()
+        return f + "?v=" + hashlib.sha1(data).hexdigest()[:10]
+
+    listing = "const FILES = [\n" + "".join(f"  {json.dumps(fingerprint(f))},\n" for f in files) + "];"
 
     sw = (ROOT / "sw.js").read_text(encoding="utf-8")
     sw = re.sub(r"const VERSION = '[^']*';", f"const VERSION = '{version}';", sw)
     sw = re.sub(r"const FILES = \[.*?\];", lambda _: listing, sw, flags=re.S)
     (ROOT / "sw.js").write_text(sw, encoding="utf-8")
-
-    app = (ROOT / "app.js").read_text(encoding="utf-8")
-    app = re.sub(r"const VERSION = '[^']*';", f"const VERSION = '{version}';", app)
-    (ROOT / "app.js").write_text(app, encoding="utf-8")
 
     print(f"Version {version}: {len(files)} files cached, {len(art)} real art files found.")
 

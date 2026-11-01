@@ -2,7 +2,7 @@ import { createSaver, NewerSaveError, NotABackupError } from './save.js';
 import { startGame } from './game.js';
 
 // Set with: python tools/release.py 1.2.3 (keeps sw.js in step).
-const VERSION = '0.8.1';
+const VERSION = '0.9.0';
 
 const $ = (id) => document.getElementById(id);
 $('panel-version').textContent = VERSION;
@@ -74,6 +74,22 @@ await saver.load();
 game = startGame(saver, openPanel);
 if (location.hostname === 'localhost') window.izzy = { game, saver }; // for testing on the computer only
 saver.requestPersist();
+
+// Android's back button would close the game in the middle of play. After each touch,
+// keep one extra step in the page history, so a back press is caught here: it closes
+// the grown-up area if it is open, and otherwise does nothing. (Chrome only honours a
+// history step added after a touch, so two back presses in a row still leave the game.)
+let backCaught = false;
+window.addEventListener('pointerdown', () => {
+  if (backCaught) return;
+  backCaught = true;
+  history.pushState({ izzy: true }, '');
+}, true);
+window.addEventListener('popstate', () => {
+  backCaught = false;
+  if (!$('confirm').hidden) $('confirm').hidden = true;
+  else $('grownups').hidden = true;
+});
 
 // --- Service worker: makes the app work offline and handles updates ---
 //

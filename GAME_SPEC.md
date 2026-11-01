@@ -186,4 +186,4 @@ Pet pictures for the dog, cat and peacock.
 5. Sit and hold mechanics, tap reactions.
 6. Café and castle rooms (scene selector, house rooms and room arrows were done early, before step 4).
 7. Pets, sound, music, mute toggles.
-8. Polish and test on Izzy's tablet: touch target sizes, performance, offline mode, update without losing the save.
+8. Polish and test on Izzy's tablet: touch target sizes, performance, offline mode, update without losing the save.  Checklist: `TESTING.md`.
