@@ -129,7 +129,24 @@ Every look needs a matching sitting picture. They replace the squashed-legs sitt
 | Jane | `Jane.jpg` | `Jane sitting.jpg` |
 | Syd | `syd.jpg` | `syd sitting.jpg` |
 
-Lying on beds keeps using the standing picture turned sideways, so no lying pictures are needed. Any new look added later needs both a standing and a sitting picture.
+Any new look added later needs a standing, a sitting and a lying picture.
+
+### 6.2 Lying pictures (requested 2026-11-01)
+Every look also needs a lying-down picture for beds. They replace the standing picture turned sideways that step 5 uses for now.
+
+**Prompt** (give the image tool the standing picture as the reference):
+> Same character, same outfit, same cartoon style and colors. Full body, lying flat on their back on an invisible bed, seen from the side, head on the left, face turned towards the viewer with a happy expression and eyes open, legs straight, one arm along the side and the other hand resting on the tummy. Plain white background, wide landscape image. No bed, no pillow, no blanket, no shadow, nothing else in the picture.
+
+**Checklist for each picture**
+- **Head on the left, feet on the right**, for every picture. The game can flip them if a bed needs it.
+- Lying flat and straight, not curled up, seen from the side, with the face turned to the viewer.
+- **No bed, pillow or blanket drawn.** They lie on the game's beds.
+- Plain white background, with the whole body in frame and a little white space around it.
+- Same outfit details as the standing look. The princess dress can drape down.
+- One hand easy to see on the tummy, so they can hold a teddy in bed.
+- **Wide (landscape) picture**, about 2400 × 1792: the standing size turned on its side.
+
+**File names** (all in `_source-photos/`): the standing file name plus "lying", for example `Izzy Main Character lying.jpg`, `hiphop izzy lying.jpg`, `mustache Izzy lying.jpg`, `princess Izzy lying.jpg`, `mom lying.jpg`, `dad lying.jpg`, `Ollie's Character lying.jpg`, `Caden lying.jpg`, `Jane lying.jpg`, `syd lying.jpg`.
 
 ## 7. Open decisions
 | # | Decision | Options / notes |
