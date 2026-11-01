@@ -100,6 +100,37 @@ All art goes in the `art/` folder using the names below, so Claude Code can find
 
 **Keep original photos out of the game.** Any original photos used as references should go in a `_source-photos/` folder, which is excluded from the build and the website.
 
+### 6.1 Sitting pictures (requested 2026-11-01)
+Every look needs a matching sitting picture. They replace the squashed-legs sitting that step 5 uses for now.
+
+**Prompt** (give the image tool the standing picture as the reference):
+> Same character, same outfit, same cartoon style and colors. Full body, sitting on an invisible seat, facing forward, knees bent, feet flat on the floor, one hand resting on a knee and the other on the lap. Plain white background. No chair, no shadow, nothing else in the picture.
+
+**Checklist for each picture**
+- Facing forward, like the standing picture (not turned sideways).
+- **No chair or stool drawn.** They sit on the game's furniture.
+- Plain white background, whole body in frame with a little white space around it.
+- Same outfit details as the standing look (the princess dress can spread over the knees).
+- At least one hand easy to see on the knee, so they can still hold things while sitting.
+- Portrait image like the standing ones (e.g. 1792 × 2400). Size doesn't have to match exactly; Claude scales them to fit.
+
+**File names** (all in `_source-photos/`):
+
+| Look | Standing file (existing) | Sitting file (new) |
+|---|---|---|
+| Izzy main | `Izzy Main Character.jpg` | `Izzy Main Character sitting.jpg` |
+| Izzy hip-hop | `hiphop izzy.jpg` | `hiphop izzy sitting.jpg` |
+| Izzy mustache | `mustache Izzy.jpg` | `mustache Izzy sitting.jpg` |
+| Izzy princess | `princess Izzy.jpg` | `princess Izzy sitting.jpg` |
+| Mom | `mom.jpg` | `mom sitting.jpg` |
+| Dad | `dad.jpg` | `dad sitting.jpg` |
+| Ollie | `Ollie's Character.jpg` | `Ollie's Character sitting.jpg` |
+| Caden | `Caden.jpg` | `Caden sitting.jpg` |
+| Jane | `Jane.jpg` | `Jane sitting.jpg` |
+| Syd | `syd.jpg` | `syd sitting.jpg` |
+
+Lying on beds keeps using the standing picture turned sideways, so no lying pictures are needed. Any new look added later needs both a standing and a sitting picture.
+
 ## 7. Open decisions
 | # | Decision | Options / notes |
 |---|---|---|
