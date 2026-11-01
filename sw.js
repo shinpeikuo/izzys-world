@@ -1,6 +1,6 @@
 // Set the version with: python tools/release.py 1.2.3 (also updates app.js).
 // That is what tells tablets there is an update to download.
-const VERSION = '0.7.2';
+const VERSION = '0.8.0';
 const CACHE = 'izzys-world-' + VERSION;
 
 // Every file the game needs to run offline. Filled in by tools/release.py.
@@ -14,6 +14,7 @@ const FILES = [
   "catalog.js",
   "game.js",
   "save.js",
+  "sound.js",
   "icons/icon-192.png",
   "icons/icon-512.png",
   "icons/icon-maskable-512.png",
@@ -310,7 +311,14 @@ const FILES = [
   "art/ui/arrow_right.webp",
   "art/ui/gear.webp",
   "art/ui/map.webp",
+  "art/ui/music_off.webp",
+  "art/ui/music_on.webp",
   "art/ui/people.webp",
+  "art/ui/sound_off.webp",
+  "art/ui/sound_on.webp",
+  "placeholder/pets/cat.webp",
+  "placeholder/pets/dog.webp",
+  "placeholder/pets/peacock.webp",
 ];
 
 self.addEventListener('install', (event) => {

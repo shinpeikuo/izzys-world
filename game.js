@@ -3,6 +3,7 @@
 import {
   ROOMS, PLACES, CHARACTERS, SEATS, REACTIONS, HOLD_MAX, artPath, itemFile, itemLayer, itemScale, lookFile, body, hasArt,
 } from './catalog.js';
+import { play, setEnabled, setTrack, unlock } from './sound.js';
 
 const W = 1920;
 const H = 1080;
@@ -17,6 +18,7 @@ const HAND_REACH = 80;   // an item dropped this close to a hand is held
 
 // onGrownups: called when the gear has been held long enough.
 export function startGame(saver, onGrownups) {
+  window.addEventListener('pointerdown', unlock, true);
   return new Phaser.Game({
     type: Phaser.AUTO,
     parent: 'game',
@@ -34,6 +36,7 @@ export function startGame(saver, onGrownups) {
 function goTo(scene, saver, screen) {
   saver.world.screen = screen;
   saver.changed();
+  play('whoosh');
   scene.cameras.main.fadeOut(180, 59, 47, 107);
   scene.cameras.main.once('camerafadeoutcomplete', () => scene.scene.start(ROOMS[screen] ? 'room' : 'world'));
 }
@@ -76,6 +79,21 @@ function addGear(scene, x, y, onGrownups, texture) {
   gear.on('pointerout', stop);
 }
 
+// Music and sound effect switches, side by side, always on screen.
+function addSoundToggles(scene, saver, x, y) {
+  const settings = () => saver.world.settings || (saver.world.settings = {});
+  for (const [i, kind] of ['music', 'sfx'].entries()) {
+    const icon = kind === 'music' ? 'music' : 'sound';
+    const isOn = () => settings()[kind] !== false;
+    const button = addButton(scene, x + i * 130, y, () => {
+      settings()[kind] = !isOn();
+      setEnabled({ [kind]: isOn() });
+      button.setTexture('ui:' + icon + (isOn() ? '_on' : '_off'));
+      saver.changed();
+    }, 'ui:' + icon + (isOn() ? '_on' : '_off'));
+  }
+}
+
 function lookKey(id, look) {
   return 'char:' + id + '_' + look;
 }
@@ -114,18 +132,23 @@ class BootScene extends Phaser.Scene {
     for (const [id, character] of Object.entries(CHARACTERS)) {
       for (const look of character.looks) {
         this.load.image(lookKey(id, look), artPath(lookFile(id, look)));
+        if (character.pet) continue;
         if (hasArt(lookFile(id, look, 'sit'))) this.load.image(sitKey(id, look), artPath(lookFile(id, look, 'sit')));
         if (hasArt(lookFile(id, look, 'lie'))) this.load.image(lieKey(id, look), artPath(lookFile(id, look, 'lie')));
       }
     }
-    for (const name of ['gear', 'arrow_left', 'arrow_right', 'map', 'people']) this.load.image('ui:' + name, artPath('ui/' + name + '.webp'));
+    const ui = ['gear', 'arrow_left', 'arrow_right', 'map', 'people', 'music_on', 'music_off', 'sound_on', 'sound_off'];
+    for (const name of ui) this.load.image('ui:' + name, artPath('ui/' + name + '.webp'));
   }
 
   create() {
+    const settings = this.saver.world.settings || {};
+    setEnabled({ music: settings.music !== false, sfx: settings.sfx !== false });
+
     // Looks without a sitting picture yet: the standing drawing with the legs squashed.
     for (const [id, character] of Object.entries(CHARACTERS)) {
       for (const look of character.looks) {
-        if (!this.textures.exists(lookKey(id, look)) || this.textures.exists(sitKey(id, look))) continue;
+        if (character.pet || !this.textures.exists(lookKey(id, look)) || this.textures.exists(sitKey(id, look))) continue;
         const src = this.textures.get(lookKey(id, look)).getSourceImage();
         const top = Math.round(src.height * body(id, look).hip);
         const legs = src.height - top;
@@ -162,10 +185,19 @@ class WorldScene extends Phaser.Scene {
     this.cameras.main.fadeIn(180, 59, 47, 107);
     this.add.image(0, 0, 'bg:world').setOrigin(0).setDisplaySize(W, H);
     addGear(this, 88, 88, this.onGrownups, 'ui:gear');
+    addSoundToggles(this, this.saver, 218, 88);
+    setTrack('world');
 
     this.input.on('pointerup', (pointer, over) => {
+      const button = over.find((o) => o.getData('onTap'));
+      if (button) {
+        play('tap');
+        button.getData('onTap')();
+        return;
+      }
       if (over.length) return; // the gear
       sparkle(this, pointer.worldX, pointer.worldY);
+      play('tap');
       for (const place of Object.values(PLACES)) {
         const [x0, y0, x1, y1] = place.hotspot;
         const inside = pointer.worldX >= x0 && pointer.worldX < x1 && pointer.worldY >= y0 && pointer.worldY < y1;
@@ -214,6 +246,8 @@ class RoomScene extends Phaser.Scene {
     }
 
     addGear(this, ...room.ui.gear, this.onGrownups);
+    addSoundToggles(this, this.saver, room.ui.gear[0] + 130, room.ui.gear[1]);
+    setTrack(room.place);
     this.createTrash(room.ui.trash);
     this.drawers = [];
     this.createDrawer(room.items.map((kind) => ({ texture: kind, kind })), room.ui.box);
@@ -263,7 +297,9 @@ class RoomScene extends Phaser.Scene {
     const seat = c.seat && this.itemSprites[c.seat.item];
     const pose = seat ? SEATS[seat.getData('item').kind][0] : 'stand';
     sprite.setData('pose', pose);
-    if (pose === 'sit') {
+    if (CHARACTERS[id].pet) {
+      sprite.setTexture(lookKey(id, c.look)).setAngle(0).setOrigin(0.5, 1); // pets just stand on the seat or bed
+    } else if (pose === 'sit') {
       const b = body(id, c.look);
       const origin = this.hasPicture(id, c.look, 'sit') ? b.seat : b.hip / (b.hip + (1 - b.hip) * SIT_SQUASH);
       sprite.setTexture(sitKey(id, c.look)).setAngle(0).setOrigin(0.5, origin);
@@ -346,6 +382,7 @@ class RoomScene extends Phaser.Scene {
   handNear(sprite) {
     let best = null;
     for (const [id, person] of Object.entries(this.characterSprites)) {
+      if (CHARACTERS[id].pet) continue;
       const hand = this.handPoint(person);
       const dist = Phaser.Math.Distance.Between(hand.x, hand.y, sprite.x, sprite.y - sprite.displayHeight / 2);
       if (dist < HAND_REACH && (!best || dist < best.dist)) best = { id, dist };
@@ -387,6 +424,7 @@ class RoomScene extends Phaser.Scene {
     this.heldSprites[id] = sprite;
     this.tweens.add({ targets: sprite, scale: itemScale(item.kind), duration: 120 });
     sparkle(this, sprite.x, sprite.y - sprite.displayHeight / 2);
+    play('sparkle');
     this.saver.changed();
   }
 
@@ -500,14 +538,17 @@ class RoomScene extends Phaser.Scene {
     const item = sprite.getData('item');
     const r = REACTIONS[item.kind];
     if (r && (r.light || r.screen) && !sprite.getData('heldBy')) {
+      play('click');
       item.on = !item.on;
       if (item.on) this.showEffect(sprite);
       else this.hideEffect(item.id);
       this.saver.changed();
     } else if (r && r.steam) {
+      play('steam');
       this.steam(sprite, r.at);
       this.wiggle(sprite);
     } else {
+      play('tap');
       this.wiggle(sprite);
     }
   }
@@ -594,6 +635,7 @@ class RoomScene extends Phaser.Scene {
   }
 
   toggleDrawer(drawer) {
+    play('open');
     for (const other of this.drawers) {
       if (other !== drawer && other.open) this.showDrawer(other, false);
     }
@@ -656,6 +698,7 @@ class RoomScene extends Phaser.Scene {
     this.applyPose(sprite);
     this.peopleThumbs[id].setTexture(lookKey(id, look));
     sparkle(this, sprite.x, sprite.y - sprite.displayHeight / 2);
+    play('sparkle');
     if (this.picker) this.closePicker();
     this.hop(sprite);
   }
@@ -707,6 +750,7 @@ class RoomScene extends Phaser.Scene {
       drag.dy = sprite.displayHeight / 2;
     }
     if (sprite.getData('heldBy')) this.letGo(sprite, drag);
+    play('pickup');
     sprite.setDepth(DRAG_DEPTH);
     if (this.picker) this.closePicker();
     this.tweens.add({ targets: sprite, scale: this.restScale(sprite) * 1.08, duration: 120 });
@@ -753,7 +797,10 @@ class RoomScene extends Phaser.Scene {
     this.drags.delete(pointer.id);
 
     if (drag.button) {
-      if (drag.button.getBounds().contains(pointer.worldX, pointer.worldY)) drag.onTap();
+      if (drag.button.getBounds().contains(pointer.worldX, pointer.worldY)) {
+        if (!drag.button.getData('picker')) play('tap'); // picking a look plays its own sparkle
+        drag.onTap();
+      }
       return;
     }
     if (drag.drawer) return;
@@ -764,9 +811,11 @@ class RoomScene extends Phaser.Scene {
     let holder;
     if (!drag.moved) {
       if (!id) this.tapItem(s);
-      else if (CHARACTERS[id].looks.length > 1) this.openPicker(s);
-      else this.hop(s);
+      else if (CHARACTERS[id].pet) { play(CHARACTERS[id].sound); this.hop(s); }
+      else if (CHARACTERS[id].looks.length > 1) { play('tap'); this.openPicker(s); }
+      else { play('boing'); this.hop(s); }
     } else if (this.overTrash(pointer) || this.overDrawer(pointer)) {
+      play('trash');
       if (id) this.sendHome(s);
       else this.removeItem(s, drag.isNew);
     } else if (id) {
@@ -779,8 +828,10 @@ class RoomScene extends Phaser.Scene {
         const at = this.seatPoint(this.itemSprites[seat.item], seat.spot, s);
         s.setPosition(at.x, at.y);
         sparkle(this, at.x, at.y);
+        play('sparkle');
       } else {
         this.restDepth(s);
+        play('drop');
       }
       c.x = Math.round(s.x);
       c.y = Math.round(s.y);
@@ -789,6 +840,7 @@ class RoomScene extends Phaser.Scene {
     } else if (this.canHold(s) && (holder = this.handNear(s))) {
       this.hold(holder, s, drag.isNew);
     } else {
+      play('drop');
       item.x = Math.round(s.x);
       item.y = Math.round(s.y);
       if (drag.isNew) this.items.push(item);

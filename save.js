@@ -22,7 +22,9 @@ const META_KEY = 'meta';
 // characters.<id>: { look, room, x, y } where id and look come from CHARACTERS in
 // catalog.js, and room is null while the character is waiting in the people drawer.
 // Optional: seat: { item, spot } (sitting on that item in their room) and
-// holding: { kind } (an item in their hand, which travels with them).
+// holding: { kind } (an item in their hand, which travels with them). Pets are kept in
+// characters too (ids from CHARACTERS with pet: true).
+// settings (optional): { music, sfx } — false when that sound is switched off.
 export function newWorld() {
   return {
     screen: 'world',

@@ -11,8 +11,9 @@ export function itemFile(kind) {
   return 'props/' + kind + '.webp';
 }
 
-// The people. Each look is a whole picture: art/characters/<id>_<look>.webp,
+// The people and pets. Each look is a whole picture: art/characters/<id>_<look>.webp,
 // made by tools/prepare_characters.py. The first look is the one they start in.
+// Pets have one picture, art/pets/<id>.webp, and a sound they make when tapped.
 export const CHARACTERS = {
   izzy: { looks: ['main', 'hiphop', 'mustache', 'princess'] },
   mom: { looks: ['default'] },
@@ -21,11 +22,15 @@ export const CHARACTERS = {
   caden: { looks: ['default'] },
   jane: { looks: ['default'] },
   syd: { looks: ['default'] },
+  dog: { pet: true, looks: ['default'], sound: 'bark' },
+  cat: { pet: true, looks: ['default'], sound: 'meow' },
+  peacock: { pet: true, looks: ['default'], sound: 'peacock' },
 };
 
 // pose: '' for the standing picture, 'sit' or 'lie' for the sitting and lying ones
 // (art/characters/<id>_<look>_sit.webp and _lie.webp).
 export function lookFile(id, look, pose = '') {
+  if (CHARACTERS[id] && CHARACTERS[id].pet) return 'pets/' + id + '.webp';
   return 'characters/' + id + '_' + look + (pose ? '_' + pose : '') + '.webp';
 }
 

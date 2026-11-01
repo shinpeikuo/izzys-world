@@ -148,13 +148,23 @@ Every look also needs a lying-down picture for beds. *Done 2026-11-01: all 10 ar
 
 **File names** (all in `_source-photos/`): the standing file name plus "lying", for example `Izzy Main Character lying.jpg`, `hiphop izzy lying.jpg`, `mustache Izzy lying.jpg`, `princess Izzy lying.jpg`, `mom lying.jpg`, `dad lying.jpg`, `Ollie's Character lying.jpg`, `Caden lying.jpg`, `Jane lying.jpg`, `syd lying.jpg`.
 
+### 6.3 Pet pictures (requested 2026-11-01)
+The dog, cat and peacock use simple stand-in drawings until real pet art exists.
+
+**Prompt:**
+> A cute cartoon [dog / cat / peacock] in the same style and colors as the family characters. Full body, standing (the dog and cat can be sitting), facing forward, happy expression. Plain white background. Nothing else in the picture. The peacock has its tail fanned out.
+
+**Checklist:** facing forward, whole body in frame, plain white background, no shadow, one animal per picture.
+
+**File names:** `art-source/Pets/dog.jpg`, `art-source/Pets/cat.jpg`, `art-source/Pets/peacock.jpg`. Pets aren't family photos, so they can go in the repository with the other art.
+
 ## 7. Open decisions
 | # | Decision | Options / notes |
 |---|---|---|
 | D1 | **Privacy of family art on the hosting site** | Anyone with the website link can download the game's images, including the family characters. A free GitHub Pages site requires a **public** code repository, which means the family art would also be visible on GitHub. Options: (a) accept this, since it's cartoon art and not photos; (b) pay for GitHub Pro to host from a private repository (the site is still reachable by its link); (c) use Netlify deployed from a private repository. Decide before the first deploy. **Decided 2026-11-01: (a) GitHub Pages from a public repository.** |
 | D2 | Tech framework | Claude Code to recommend. A 2D game framework with touch drag-and-drop, scenes, and audio support (such as Phaser) is the likely fit. |
 | D3 | Friend character looks | Shinpei to generate 4–6 kids in the same style |
-| D4 | Music and sound sources | To be chosen (royalty-free) |
+| D4 | Music and sound sources | **Decided 2026-11-01:** made by the game itself (Web Audio tones and noise), so there are no sound files and nothing to license. Real recordings can replace them later. |
 | D5 | Ask Izzy | Confirm the places, pets, and any must-have items with her before the art push |
 
 ## 8. Suggested build order (Claude Code)

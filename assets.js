@@ -292,5 +292,9 @@ export const ART = new Set([
  "art/ui/arrow_right.webp",
  "art/ui/gear.webp",
  "art/ui/map.webp",
- "art/ui/people.webp"
+ "art/ui/music_off.webp",
+ "art/ui/music_on.webp",
+ "art/ui/people.webp",
+ "art/ui/sound_off.webp",
+ "art/ui/sound_on.webp"
 ]);

@@ -76,6 +76,28 @@ def map_button(world):
     return img.resize((SIZE, SIZE), Image.LANCZOS)
 
 
+def sound_button(kind, on):
+    """Music (a pair of notes) or sound effects (a speaker). Off adds a red line across."""
+    img, d = badge()
+    s = SIZE * 4
+    if kind == "music":
+        for x in (0.36, 0.62):
+            d.ellipse([(x - 0.1) * s, 0.58 * s, (x + 0.06) * s, 0.72 * s], fill=OUTLINE)
+            d.line([((x + 0.045) * s, 0.65 * s), ((x + 0.045) * s, 0.3 * s)], fill=OUTLINE, width=26)
+        d.polygon([(0.395 * s, 0.26 * s), (0.68 * s, 0.2 * s), (0.68 * s, 0.3 * s), (0.395 * s, 0.36 * s)], fill=OUTLINE)
+    else:
+        d.rectangle([0.27 * s, 0.41 * s, 0.39 * s, 0.59 * s], fill=OUTLINE)
+        d.polygon([(0.37 * s, 0.41 * s), (0.53 * s, 0.27 * s), (0.53 * s, 0.73 * s), (0.37 * s, 0.59 * s)], fill=OUTLINE)
+        if on:
+            for r in (0.12, 0.21):
+                d.arc([(0.5 - r) * s, (0.5 - r) * s, (0.5 + r) * s + 0.08 * s, (0.5 + r) * s],
+                      start=-50, end=50, fill=OUTLINE, width=24)
+    if not on:
+        d.line([(0.25 * s, 0.75 * s), (0.75 * s, 0.25 * s)], fill=(255, 255, 255), width=70)
+        d.line([(0.25 * s, 0.75 * s), (0.75 * s, 0.25 * s)], fill=(220, 50, 70), width=40)
+    return img.resize((SIZE, SIZE), Image.LANCZOS)
+
+
 resized = {}
 for out, src in BACKGROUNDS.items():
     img = Image.open(SRC / src).convert("RGB").resize((1920, 1080), Image.LANCZOS)
@@ -86,4 +108,7 @@ save(circle_crop(resized["places/house_living_bg.webp"], 88, 85, 70), "ui/gear.w
 save(arrow("left"), "ui/arrow_left.webp")
 save(arrow("right"), "ui/arrow_right.webp")
 save(map_button(resized["places/world_bg.webp"]), "ui/map.webp")
+for kind in ("music", "sound"):
+    save(sound_button(kind, True), f"ui/{kind}_on.webp")
+    save(sound_button(kind, False), f"ui/{kind}_off.webp")
 print("Backgrounds and buttons written to", ART)
