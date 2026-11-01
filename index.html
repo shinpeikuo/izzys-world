@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <title>Izzy's World</title>
+  <meta name="theme-color" content="#7b5cff">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main id="hello">
+    <div class="sky">
+      <span class="cloud c1"></span>
+      <span class="cloud c2"></span>
+    </div>
+    <h1 class="title">Izzy's World</h1>
+    <button id="star" class="star" aria-label="Star">★</button>
+  </main>
+
+  <!-- Shown only when the tablet is held upright -->
+  <div id="rotate" aria-hidden="true">
+    <div class="rotate-icon">📱↻</div>
+  </div>
+
+  <!-- Small grown-up info in the corner: version and offline status -->
+  <footer id="status">
+    <span id="version"></span>
+    <span id="offline"></span>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

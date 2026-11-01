@@ -1,0 +1,7 @@
+# Original reference photos must never be in the repository or the website
+_source-photos/
+
+# Local tools
+tools/__pycache__/
+.DS_Store
+Thumbs.db

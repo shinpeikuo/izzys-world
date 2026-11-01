@@ -1,0 +1,86 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  background: #bfe6ff;
+  font-family: system-ui, "Segoe UI", Roboto, sans-serif;
+  /* No text selection, callouts or double-tap zoom on a kid's tablet */
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  touch-action: manipulation;
+}
+
+#hello {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4vh;
+  background: linear-gradient(#bfe6ff 0%, #e8f6ff 65%, #9be29b 65%, #7ccf7c 100%);
+}
+
+.title {
+  position: relative;
+  font-size: clamp(48px, 10vw, 140px);
+  font-weight: 900;
+  color: #7b5cff;
+  text-shadow: 0 6px 0 #fff, 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.star {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  border: none;
+  border-radius: 50%;
+  background: #ffd23f;
+  color: #fff;
+  font-size: 90px;
+  line-height: 1;
+  box-shadow: 0 8px 0 #e0a800;
+  cursor: pointer;
+}
+.star:active { transform: translateY(6px); box-shadow: 0 2px 0 #e0a800; }
+.star.spin { animation: spin 0.6s ease-out; }
+@keyframes spin { to { rotate: 360deg; } }
+
+.cloud {
+  position: absolute;
+  width: 220px;
+  height: 70px;
+  background: #fff;
+  border-radius: 60px;
+  opacity: 0.9;
+}
+.c1 { top: 10%; left: 8%; animation: drift 30s linear infinite alternate; }
+.c2 { top: 22%; right: 10%; transform: scale(0.7); animation: drift 40s linear infinite alternate-reverse; }
+@keyframes drift { to { translate: 120px 0; } }
+
+#rotate {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: #7b5cff;
+  color: #fff;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+.rotate-icon { font-size: 120px; }
+@media (orientation: portrait) {
+  #rotate { display: flex; }
+}
+
+#status {
+  position: fixed;
+  right: 12px;
+  bottom: 8px;
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.45);
+  display: flex;
+  gap: 10px;
+}

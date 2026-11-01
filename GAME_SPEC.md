@@ -1,0 +1,110 @@
+# Izzy's World — Game Spec (V1)
+
+*Owner: Shinpei Kuo · Drafted: 2026-11-01 · Status: Draft for review before build*
+
+## 1. Concept
+Izzy's World is an open-ended, creative play game inspired by Toca Boca. Players pick characters, change their outfits, place them in rooms, decorate, and play. There is no score, no levels, and no way to "lose." It is built for Izzy's Android tablet, and friends and family can install it too.
+
+## 2. Platform and technical requirements
+| Item | Decision |
+|---|---|
+| App type | Progressive Web App (PWA), installable from Chrome on Android ("Install app" / "Add to Home screen") |
+| Orientation | **Landscape**, locked in the web manifest |
+| Data | **All game data stays on the device.** No accounts, no server, no analytics, no ads, no network calls after install. |
+| Offline | Fully playable offline after the first load (service worker caches all code, art, and audio) |
+| Storage | IndexedDB, with a request for persistent storage (`navigator.storage.persist()`) |
+| Backup | **"Save backup" / "Load backup"** buttons in a grown-up settings area that export and import the world as a file, because clearing Chrome data or uninstalling the app erases saves |
+| Saves | **One world per device.** Everything auto-saves and reopens exactly where it was left. |
+| Hosting | GitHub Pages (free, HTTPS). See open decision D1 about privacy. |
+| Updates | When a new version is published, the app updates the next time it opens online. Saved worlds must survive updates (versioned save format with migrations). |
+
+## 3. Players and reading level
+- Shared tablet, one world. Anyone playing uses the same world.
+- **Short labels only.** Icons and pictures first, with one- or two-word labels. No instructions that require reading.
+- Large touch targets for small fingers. Everything works with tap and drag. No pinch gestures are required.
+
+## 4. V1 content
+
+### 4.1 Characters
+**Family characters** (art already started by Shinpei):
+
+| Character | Looks available now | Source file | Art prep needed |
+|---|---|---|---|
+| Izzy | Main (white top, jeans, boots), Hip-hop (sequin-stripe tracksuit), Mustache (red tee, fake mustache) | `Izzy Main Character.jpg`, `hiphop Izzy.jpg`, `mustache Izzy.jpg` | Remove backgrounds. Separate the peacock from the main image. Hip-hop has a photo background to remove. |
+| Mom | Default (yellow tank, denim shorts) | `mom.jpg` | Remove background |
+| Dad | Default (tan blazer) | `dad.jpg` | Remove background |
+| Ollie | Default (navy hoodie) | `Ollie's Character.jpg` | Remove background |
+
+**Preset friend characters:** 4–6 generic kids with a variety of looks, made in the same cartoon style. Players can rename them using a short name field.
+
+**Dress-up = outfit swaps.** Each look is a complete full-body image. A character's outfit picker shows that character's looks as thumbnails, and tapping one switches the look. (Mix-and-match layered clothing is deferred to V2.)
+
+### 4.2 Pets
+- **Peacock** (from Izzy's main character art, separated out)
+- **Dog**
+- **Cat**
+
+Pets can be dragged, placed, and tapped for a sound and reaction.
+
+### 4.3 Places (3)
+| Place | Setting type | Suggested props |
+|---|---|---|
+| **House** | Family home | Bed, couch, table and chairs, TV, lamp, fridge, pictures, rug |
+| **Café** | Town | Counter, café tables and chairs, cups, pastries, menu board, coffee machine |
+| **Castle** | Fantasy | Throne, banners, chandelier, chest, crowns, torches |
+
+Players move between places using a simple map or a row of place buttons. Characters and items can be carried from one place to another.
+
+### 4.4 Interactions (all in V1)
+1. **Drag and place:** move characters, pets, and items anywhere in a room.
+2. **Sit or lie on furniture:** dropping a character on a chair, couch, bed, or throne snaps them into a seat spot.
+3. **Hold items:** dropping a small item (cup, pastry, crown, toy) on a character's hand attaches it so it moves with them.
+4. **Tap for reactions:** lights switch on and off, the TV turns on, pets make sounds, the coffee machine animates.
+5. **Decorate:** an item drawer for each place lets players add, move, and remove furniture and decorations.
+
+### 4.5 Sound
+- Sound effects for taps, pickup and drop, pet sounds, and object reactions.
+- Background music for each place.
+- **Separate on/off toggles for music and sound effects**, always visible.
+
+## 5. Out of scope for V1 (later versions)
+- Character builder with layered parts (V2)
+- Mix-and-match clothing layers
+- Multiplayer or sharing worlds between devices
+- Goals, quests, or unlocks (V1 is pure free play)
+- In-app photo-to-character conversion
+- More places (town and fantasy places get added in updates)
+
+## 6. Art production guide (for Shinpei)
+All art goes in the `art/` folder using the names below, so Claude Code can find it.
+
+| Asset type | Format | Size guidance | Notes |
+|---|---|---|---|
+| Character looks | PNG, **transparent background** | Same canvas for every character (e.g., 1024 × 2048), feet at the same bottom line | Neutral standing poses work best for sitting and holding. One file per look. |
+| Room backgrounds | PNG or WebP | 1920 × 1080 (landscape, 16:9) | No furniture baked in if the player should be able to move it. Leave the floor clear. |
+| Furniture and props | PNG, **transparent background** | Drawn to scale against the characters | One object per file |
+| Pets | PNG, transparent | Same scale as characters | |
+| Sounds and music | MP3 or OGG | Keep music loops short (under 1 MB each) | Use royalty-free sources and keep a note of where each came from |
+
+**Naming convention:** `characters/izzy_main.png`, `characters/izzy_hiphop.png`, `characters/mom_default.png`, `places/cafe_bg.png`, `props/cafe_table.png`, `pets/peacock.png`.
+
+**Keep original photos out of the game.** Any original photos used as references should go in a `_source-photos/` folder, which is excluded from the build and the website.
+
+## 7. Open decisions
+| # | Decision | Options / notes |
+|---|---|---|
+| D1 | **Privacy of family art on the hosting site** | Anyone with the website link can download the game's images, including the family characters. A free GitHub Pages site requires a **public** code repository, which means the family art would also be visible on GitHub. Options: (a) accept this, since it's cartoon art and not photos; (b) pay for GitHub Pro to host from a private repository (the site is still reachable by its link); (c) use Netlify deployed from a private repository. Decide before the first deploy. **Decided 2026-11-01: (a) GitHub Pages from a public repository.** |
+| D2 | Tech framework | Claude Code to recommend. A 2D game framework with touch drag-and-drop, scenes, and audio support (such as Phaser) is the likely fit. |
+| D3 | Friend character looks | Shinpei to generate 4–6 kids in the same style |
+| D4 | Music and sound sources | To be chosen (royalty-free) |
+| D5 | Ask Izzy | Confirm the places, pets, and any must-have items with her before the art push |
+
+## 8. Suggested build order (Claude Code)
+1. Project setup, PWA manifest (landscape), service worker, deploy a "hello" page to the tablet and confirm it installs.
+2. Save system (IndexedDB, persistent storage, backup export/import), built before content.
+3. House scene with placeholder art: drag-and-drop, item drawer.
+4. Characters and outfit swapping using the real family art.
+5. Sit and hold mechanics, tap reactions.
+6. Café and castle, travel between places.
+7. Pets, sound, music, mute toggles.
+8. Polish and test on Izzy's tablet: touch target sizes, performance, offline mode, update without losing the save.
