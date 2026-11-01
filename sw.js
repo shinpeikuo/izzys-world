@@ -1,6 +1,6 @@
 // Set the version with: python tools/release.py 1.2.3 (also updates app.js).
 // That is what tells tablets there is an update to download.
-const VERSION = '0.7.1';
+const VERSION = '0.7.2';
 const CACHE = 'izzys-world-' + VERSION;
 
 // Every file the game needs to run offline. Filled in by tools/release.py.
@@ -19,24 +19,34 @@ const FILES = [
   "icons/icon-maskable-512.png",
   "vendor/phaser.min.js",
   "art/characters/caden_default.webp",
+  "art/characters/caden_default_lie.webp",
   "art/characters/caden_default_sit.webp",
   "art/characters/dad_default.webp",
+  "art/characters/dad_default_lie.webp",
   "art/characters/dad_default_sit.webp",
   "art/characters/izzy_hiphop.webp",
+  "art/characters/izzy_hiphop_lie.webp",
   "art/characters/izzy_hiphop_sit.webp",
   "art/characters/izzy_main.webp",
+  "art/characters/izzy_main_lie.webp",
   "art/characters/izzy_main_sit.webp",
   "art/characters/izzy_mustache.webp",
+  "art/characters/izzy_mustache_lie.webp",
   "art/characters/izzy_mustache_sit.webp",
   "art/characters/izzy_princess.webp",
+  "art/characters/izzy_princess_lie.webp",
   "art/characters/izzy_princess_sit.webp",
   "art/characters/jane_default.webp",
+  "art/characters/jane_default_lie.webp",
   "art/characters/jane_default_sit.webp",
   "art/characters/mom_default.webp",
+  "art/characters/mom_default_lie.webp",
   "art/characters/mom_default_sit.webp",
   "art/characters/ollie_default.webp",
+  "art/characters/ollie_default_lie.webp",
   "art/characters/ollie_default_sit.webp",
   "art/characters/syd_default.webp",
+  "art/characters/syd_default_lie.webp",
   "art/characters/syd_default_sit.webp",
   "art/places/cafe_bg.webp",
   "art/places/castle_bedroom_bg.webp",

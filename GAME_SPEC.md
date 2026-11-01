@@ -132,7 +132,7 @@ Every look needs a matching sitting picture. *Done 2026-11-01: all 10 are in the
 Any new look added later needs a standing, a sitting and a lying picture.
 
 ### 6.2 Lying pictures (requested 2026-11-01)
-Every look also needs a lying-down picture for beds. They replace the standing picture turned sideways that step 5 uses for now.
+Every look also needs a lying-down picture for beds. *Done 2026-11-01: all 10 are in the game; a look added later without one falls back to the standing picture turned sideways.*
 
 **Prompt** (give the image tool the standing picture as the reference):
 > Same character, same outfit, same cartoon style and colors. Full body, lying flat on their back on an invisible bed, seen from the side, head on the left, face turned towards the viewer with a happy expression and eyes open, legs straight, one arm along the side and the other hand resting on the tummy. Plain white background, wide landscape image. No bed, no pillow, no blanket, no shadow, nothing else in the picture.

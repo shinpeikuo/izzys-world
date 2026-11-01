@@ -84,6 +84,10 @@ function sitKey(id, look) {
   return 'sit:' + id + '_' + look;
 }
 
+function lieKey(id, look) {
+  return 'lie:' + id + '_' + look;
+}
+
 function sparkle(scene, x, y) {
   const c = scene.add.circle(x, y, 20, 0xffffff, 0.8).setDepth(UI_DEPTH);
   scene.tweens.add({ targets: c, radius: 70, alpha: 0, duration: 350, onComplete: () => c.destroy() });
@@ -111,6 +115,7 @@ class BootScene extends Phaser.Scene {
       for (const look of character.looks) {
         this.load.image(lookKey(id, look), artPath(lookFile(id, look)));
         if (hasArt(lookFile(id, look, 'sit'))) this.load.image(sitKey(id, look), artPath(lookFile(id, look, 'sit')));
+        if (hasArt(lookFile(id, look, 'lie'))) this.load.image(lieKey(id, look), artPath(lookFile(id, look, 'lie')));
       }
     }
     for (const name of ['gear', 'arrow_left', 'arrow_right', 'map', 'people']) this.load.image('ui:' + name, artPath('ui/' + name + '.webp'));
@@ -260,8 +265,10 @@ class RoomScene extends Phaser.Scene {
     sprite.setData('pose', pose);
     if (pose === 'sit') {
       const b = body(id, c.look);
-      const origin = this.hasSitPicture(id, c.look) ? b.seat : b.hip / (b.hip + (1 - b.hip) * SIT_SQUASH);
+      const origin = this.hasPicture(id, c.look, 'sit') ? b.seat : b.hip / (b.hip + (1 - b.hip) * SIT_SQUASH);
       sprite.setTexture(sitKey(id, c.look)).setAngle(0).setOrigin(0.5, origin);
+    } else if (pose === 'lie' && this.hasPicture(id, c.look, 'lie')) {
+      sprite.setTexture(lieKey(id, c.look)).setAngle(0).setOrigin(0.5, body(id, c.look).back);
     } else if (pose === 'lie') {
       sprite.setTexture(lookKey(id, c.look)).setAngle(-90).setOrigin(0.5, 0.5);
     } else {
@@ -275,7 +282,8 @@ class RoomScene extends Phaser.Scene {
     const spacing = (seat.displayWidth * 0.9) / spots;
     const x = seat.x + (spot - (spots - 1) / 2) * spacing;
     let y = seat.y - height * seat.displayHeight;
-    if (pose === 'lie') y -= sprite.width * 0.15; // lying down: the middle of the body, just above the mattress
+    // Lying down without a lying picture: the standing one turned, its middle just above the mattress.
+    if (pose === 'lie' && sprite.angle !== 0) y -= sprite.width * 0.15;
     return { x, y };
   }
 
@@ -301,9 +309,9 @@ class RoomScene extends Phaser.Scene {
     return null;
   }
 
-  // A real sitting picture, rather than the squashed standing one made at start-up.
-  hasSitPicture(id, look) {
-    return hasArt(lookFile(id, look, 'sit'));
+  // A real sitting or lying picture, rather than one made from the standing picture.
+  hasPicture(id, look, pose) {
+    return hasArt(lookFile(id, look, pose));
   }
 
   // Where a person's free hand is in the room right now.
@@ -314,9 +322,12 @@ class RoomScene extends Phaser.Scene {
     const fullHeight = this.textures.get(lookKey(id, look)).getSourceImage().height;
     let px = b.hand[0] * sprite.width;
     let py = b.hand[1] * fullHeight;
-    if (sprite.getData('pose') === 'sit') {
-      if (this.hasSitPicture(id, look)) [px, py] = [b.sitHand[0] * sprite.width, b.sitHand[1] * sprite.height];
+    const pose = sprite.getData('pose');
+    if (pose === 'sit') {
+      if (this.hasPicture(id, look, 'sit')) [px, py] = [b.sitHand[0] * sprite.width, b.sitHand[1] * sprite.height];
       else if (b.hand[1] > b.hip) py = (b.hip + (b.hand[1] - b.hip) * SIT_SQUASH) * fullHeight;
+    } else if (pose === 'lie' && this.hasPicture(id, look, 'lie')) {
+      [px, py] = [b.lieHand[0] * sprite.width, b.lieHand[1] * sprite.height];
     }
     const lx = px - sprite.originX * sprite.width;
     const ly = py - sprite.originY * sprite.height;

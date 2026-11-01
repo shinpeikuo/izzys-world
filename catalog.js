@@ -23,7 +23,8 @@ export const CHARACTERS = {
   syd: { looks: ['default'] },
 };
 
-// pose: '' for the standing picture, 'sit' for the sitting one (art/characters/<id>_<look>_sit.webp).
+// pose: '' for the standing picture, 'sit' or 'lie' for the sitting and lying ones
+// (art/characters/<id>_<look>_sit.webp and _lie.webp).
 export function lookFile(id, look, pose = '') {
   return 'characters/' + id + '_' + look + (pose ? '_' + pose : '') + '.webp';
 }
@@ -35,14 +36,19 @@ export function hasArt(file) {
 // Where each look's free hand is, and where the legs start (for sitting without a sitting
 // picture), as fractions of the picture from its top-left corner.
 // In the sitting picture: sitHand is the hand on the knee and seat is the height of the
-// seat under them. Looks not listed use DEFAULT_BODY.
-const DEFAULT_BODY = { hand: [0.86, 0.61], hip: 0.58, sitHand: [0.68, 0.6], seat: 0.65 };
+// seat under them. In the lying picture: lieHand is the hand on the tummy and back is the
+// height of their back (where the mattress is). Looks not listed use DEFAULT_BODY.
+const DEFAULT_BODY = {
+  hand: [0.86, 0.61], hip: 0.58, sitHand: [0.68, 0.6], seat: 0.65, lieHand: [0.47, 0.3], back: 0.85,
+};
 const BODIES = {
   izzy_hiphop: { hand: [0.75, 0.33], hip: 0.55 },
   izzy_mustache: { seat: 0.63 },
   mom_default: { seat: 0.63 },
   izzy_princess: { hand: [0.33, 0.53], hip: 0.55 },
-  dad_default: { hand: [0.9, 0.6], hip: 0.56 },
+  dad_default: { hand: [0.9, 0.6], hip: 0.56, lieHand: [0.5, 0.25] },
+  caden_default: { lieHand: [0.6, 0.2] },
+  syd_default: { lieHand: [0.43, 0.38] },
 };
 
 export function body(id, look) {

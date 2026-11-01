@@ -45,6 +45,13 @@ SIT_SIZE = {
     "caden_default": 0.86, "jane_default": 0.87, "syd_default": 0.88,
 }
 
+# The same kind of fix for the lying pictures.
+# (Lying faces and body lengths didn't always agree, so these are a middle ground.)
+LIE_SIZE = {
+    "izzy_main": 0.93, "izzy_hiphop": 0.95, "izzy_princess": 0.85, "mom_default": 0.88,
+    "dad_default": 0.94, "caden_default": 0.92, "jane_default": 0.9, "syd_default": 0.82,
+}
+
 
 def cut_out(path):
     """The drawing with a transparent background, cropped to the character."""
@@ -98,9 +105,9 @@ def make_people_button(izzy):
 
 def pose_file(file, pose):
     """The sitting or lying picture for a look: same name plus ' sitting' or ' lying'.
-    Capital letters and extra spaces don't matter."""
+    Capital letters, extra spaces and "'s" don't matter."""
     def norm(name):
-        return " ".join(name.lower().split())
+        return " ".join(name.lower().replace("'s", "").split())
     wanted = norm(Path(file).stem + " " + pose)
     for p in SRC.iterdir():
         if norm(p.stem) == wanted:
@@ -131,6 +138,15 @@ def main():
             size = (round(sit.width * sit_scale), round(sit.height * sit_scale))
             sit.resize(size, Image.LANCZOS).save(out_dir / f"{name}_sit.webp", quality=90)
             print(f"{name}_sit: {size[0]}x{size[1]}")
+
+        # Lying picture (head on the left): the face the same size as standing.
+        lying = pose_file(file, "lying")
+        if lying:
+            lie = cut_out(lying)
+            lie_scale = scale * LIE_SIZE.get(name, 1)
+            size = (round(lie.width * lie_scale), round(lie.height * lie_scale))
+            lie.resize(size, Image.LANCZOS).save(out_dir / f"{name}_lie.webp", quality=90)
+            print(f"{name}_lie: {size[0]}x{size[1]}")
 
 
 main()
