@@ -5,7 +5,7 @@
 Reads the drawings in _source-photos/ (which never go in the repository), removes the
 white background, shrinks each one to its height in the game and saves it as
 art/characters/<character>_<look>.webp (plus _sit and _lie versions when those exist).
-Pets come from art-source/Pets/<pet>.jpg and are saved as art/pets/<pet>.webp. Also makes the people button (ui/people.webp)
+Pets come from _source-photos/<pet>.jpg and are saved as art/pets/<pet>.webp. Also makes the people button (ui/people.webp)
 from Izzy's face.
 
 To add a look: add a line to LOOKS below, run this, then add the look to CHARACTERS in
@@ -38,8 +38,8 @@ LOOKS = {
     "syd_default": ("syd.jpg", 380),
 }
 
-# Pets: art-source/Pets/<pet>.jpg -> art/pets/<pet>.webp, this tall in room pixels.
-PETS = {"dog": 200, "cat": 160, "peacock": 280}
+# Pets: _source-photos/<pet>.jpg -> art/pets/<pet>.webp, this tall in room pixels.
+PETS = {"dog": 200, "cat": 175, "peacock": 240}
 
 # Sitting pictures are shrunk by the same amount as the standing one. Some were drawn a
 # little closer up; this fixes those so the face comes out the same size (measured by eye,
@@ -154,7 +154,7 @@ def main():
 
     pets_dir = ROOT / "art" / "pets"
     for pet, height in PETS.items():
-        src = ROOT / "art-source" / "Pets" / f"{pet}.jpg"
+        src = SRC / f"{pet}.jpg"
         if (only and pet not in only) or not src.exists():
             continue
         figure = cut_out(src)

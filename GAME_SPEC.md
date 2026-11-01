@@ -149,7 +149,7 @@ Every look also needs a lying-down picture for beds. *Done 2026-11-01: all 10 ar
 **File names** (all in `_source-photos/`): the standing file name plus "lying", for example `Izzy Main Character lying.jpg`, `hiphop izzy lying.jpg`, `mustache Izzy lying.jpg`, `princess Izzy lying.jpg`, `mom lying.jpg`, `dad lying.jpg`, `Ollie's Character lying.jpg`, `Caden lying.jpg`, `Jane lying.jpg`, `syd lying.jpg`.
 
 ### 6.3 Pet pictures (requested 2026-11-01)
-The dog, cat and peacock use simple stand-in drawings until real pet art exists.
+Pet pictures for the dog, cat and peacock.
 
 **Give the image tool a style reference:** attach one of the finished character pictures (for example `Izzy Main Character.jpg`) and say it is for style only.
 
@@ -167,7 +167,7 @@ The dog, cat and peacock use simple stand-in drawings until real pet art exists.
 - Any size and shape is fine; Claude scales them to fit (dog about half as tall as Izzy, cat a bit smaller, peacock a bit taller than the dog).
 - You can pick your own breed or colors, for example a pet that looks like one you know.
 
-**File names:** `art-source/Pets/dog.jpg`, `art-source/Pets/cat.jpg`, `art-source/Pets/peacock.jpg` (create the `Pets` folder). Pets aren't family photos, so they can go in the repository with the other art.
+**File names:** `_source-photos/dog.jpg`, `_source-photos/cat.jpg`, `_source-photos/peacock.jpg`. *Done 2026-11-01: all three are in the game.*
 
 ## 7. Open decisions
 | # | Decision | Options / notes |
