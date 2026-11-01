@@ -1,53 +1,15 @@
 import { createSaver, NewerSaveError, NotABackupError } from './save.js';
+import { startGame } from './game.js';
 
-// Bump this together with VERSION in sw.js whenever you publish a change.
-const VERSION = '0.2.0';
+// Set with: python tools/release.py 1.2.3 (keeps sw.js in step).
+const VERSION = '0.3.0';
 
 const $ = (id) => document.getElementById(id);
 $('version').textContent = 'v' + VERSION;
 $('panel-version').textContent = VERSION;
 
 const saver = createSaver(VERSION);
-
-// --- Placeholder play: drag the star anywhere, tap it to spin ---
-// Its position is saved, so it is a quick way to check the save system works.
-
-const star = $('star');
-
-function placeStar() {
-  const { x, y } = saver.world.star;
-  star.style.left = x * 100 + '%';
-  star.style.top = y * 100 + '%';
-}
-
-function spin() {
-  star.classList.remove('spin');
-  void star.offsetWidth; // restart the animation
-  star.classList.add('spin');
-}
-
-let drag = null;
-star.addEventListener('pointerdown', (e) => {
-  star.setPointerCapture(e.pointerId);
-  drag = { startX: e.clientX, startY: e.clientY, moved: false };
-});
-star.addEventListener('pointermove', (e) => {
-  if (!drag) return;
-  if (!drag.moved && Math.hypot(e.clientX - drag.startX, e.clientY - drag.startY) < 10) return;
-  drag.moved = true;
-  star.classList.add('dragging');
-  const clamp = (v) => Math.min(0.95, Math.max(0.05, v));
-  saver.world.star = { x: clamp(e.clientX / innerWidth), y: clamp(e.clientY / innerHeight) };
-  placeStar();
-});
-star.addEventListener('pointerup', () => {
-  if (!drag) return;
-  star.classList.remove('dragging');
-  if (drag.moved) saver.changed();
-  else spin();
-  drag = null;
-});
-star.addEventListener('pointercancel', () => { star.classList.remove('dragging'); drag = null; });
+let game = null;
 
 // --- Grown-up area: press and hold the gear for 2 seconds ---
 
@@ -114,7 +76,7 @@ $('confirm-yes').addEventListener('click', async () => {
   $('confirm').hidden = true;
   try {
     await saver.replaceWorld(pendingWorld);
-    placeStar();
+    game.scene.getScene('place').scene.restart();
     showMessage('Backup loaded ✓', 'ok');
   } catch {
     showMessage('Could not load the backup. The world was not changed.', 'error');
@@ -125,7 +87,7 @@ $('confirm-yes').addEventListener('click', async () => {
 // --- Start up ---
 
 await saver.load();
-placeStar();
+game = startGame(saver);
 saver.requestPersist();
 
 // --- Service worker: makes the app work offline and handles updates ---

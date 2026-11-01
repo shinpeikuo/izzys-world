@@ -3,7 +3,7 @@
 html, body {
   height: 100%;
   overflow: hidden;
-  background: #bfe6ff;
+  background: #3b2f6b;
   font-family: system-ui, "Segoe UI", Roboto, sans-serif;
   /* No text selection, callouts or double-tap zoom on a kid's tablet */
   user-select: none;
@@ -12,58 +12,12 @@ html, body {
   touch-action: manipulation;
 }
 
-#hello {
-  position: relative;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4vh;
-  background: linear-gradient(#bfe6ff 0%, #e8f6ff 65%, #9be29b 65%, #7ccf7c 100%);
+#game {
+  position: fixed;
+  inset: 0;
+  background: #3b2f6b; /* shows at the edges if the screen is not 16:9 */
 }
-
-.title {
-  position: relative;
-  font-size: clamp(48px, 10vw, 140px);
-  font-weight: 900;
-  color: #7b5cff;
-  text-shadow: 0 6px 0 #fff, 0 10px 20px rgba(0, 0, 0, 0.15);
-}
-
-.star {
-  position: absolute;
-  left: 50%;
-  top: 78%;
-  translate: -50% -50%;
-  touch-action: none;
-  width: 140px;
-  height: 140px;
-  border: none;
-  border-radius: 50%;
-  background: #ffd23f;
-  color: #fff;
-  font-size: 90px;
-  line-height: 1;
-  box-shadow: 0 8px 0 #e0a800;
-  cursor: pointer;
-}
-.star.dragging { cursor: grabbing; scale: 1.1; }
-.star:active { transform: translateY(6px); box-shadow: 0 2px 0 #e0a800; }
-.star.spin { animation: spin 0.6s ease-out; }
-@keyframes spin { to { rotate: 360deg; } }
-
-.cloud {
-  position: absolute;
-  width: 220px;
-  height: 70px;
-  background: #fff;
-  border-radius: 60px;
-  opacity: 0.9;
-}
-.c1 { top: 10%; left: 8%; animation: drift 30s linear infinite alternate; }
-.c2 { top: 22%; right: 10%; transform: scale(0.7); animation: drift 40s linear infinite alternate-reverse; }
-@keyframes drift { to { translate: 120px 0; } }
+#game canvas { touch-action: none; }
 
 #rotate {
   display: none;
@@ -83,9 +37,10 @@ html, body {
 #status {
   position: fixed;
   right: 12px;
-  bottom: 8px;
+  top: 8px;
   font-size: 12px;
-  color: rgba(0, 0, 0, 0.45);
+  color: rgba(0, 0, 0, 0.4);
+  pointer-events: none;
   display: flex;
   gap: 10px;
 }

@@ -5,25 +5,30 @@
 // When the shape of the world changes in an update, bump SAVE_VERSION and add a
 // migration that upgrades the old shape, so existing worlds keep working.
 
-export const SAVE_VERSION = 1;
+export const SAVE_VERSION = 2;
 const FORMAT = 'izzys-world-save';
 const DB_NAME = 'izzys-world';
 const STORE = 'kv';
 const WORLD_KEY = 'world';
 const META_KEY = 'meta';
 
-// A brand new world. This only grows through migrations once it has shipped.
+// A brand new world. A place that is not in `places` yet gets its starting
+// furniture the first time it is shown, so adding a new place needs no migration.
+//
+// places.<id>.items: [{ id, kind, x, y }] where kind is a catalog id and x, y
+// are the item's bottom-middle point in room pixels (1920 x 1080).
 export function newWorld() {
   return {
-    star: { x: 0.5, y: 0.78 }, // placeholder from the hello page, as a fraction of the screen
+    place: 'house',
+    places: {},
   };
 }
 
 // MIGRATIONS[n] turns a version-n world into a version n+1 world.
 // Never change or remove a migration after it has been published.
 export const MIGRATIONS = {
-  // Example for the next change:
-  // 1: (world) => ({ ...world, places: { house: { items: [] } } }),
+  // v1 (hello page: a draggable star) -> v2 (places with furniture)
+  1: () => ({ place: 'house', places: {} }),
 };
 
 export class NewerSaveError extends Error {}

@@ -1,19 +1,35 @@
-// Bump VERSION (here and in app.js) every time you publish a change.
+// Set the version with: python tools/release.py 1.2.3 (also updates app.js).
 // That is what tells tablets there is an update to download.
-const VERSION = '0.2.0';
+const VERSION = '0.3.0';
 const CACHE = 'izzys-world-' + VERSION;
 
-// Every file the game needs to run offline. Add new files here as they are created.
+// Every file the game needs to run offline. Filled in by tools/release.py.
 const FILES = [
-  './',
-  'index.html',
-  'style.css',
-  'app.js',
-  'save.js',
-  'manifest.webmanifest',
-  'icons/icon-192.png',
-  'icons/icon-512.png',
-  'icons/icon-maskable-512.png',
+  "./",
+  "index.html",
+  "style.css",
+  "manifest.webmanifest",
+  "app.js",
+  "assets.js",
+  "catalog.js",
+  "game.js",
+  "save.js",
+  "icons/icon-192.png",
+  "icons/icon-512.png",
+  "icons/icon-maskable-512.png",
+  "vendor/phaser.min.js",
+  "placeholder/places/house_bg.png",
+  "placeholder/props/house_bed.png",
+  "placeholder/props/house_chair.png",
+  "placeholder/props/house_couch.png",
+  "placeholder/props/house_fridge.png",
+  "placeholder/props/house_lamp.png",
+  "placeholder/props/house_picture.png",
+  "placeholder/props/house_rug.png",
+  "placeholder/props/house_table.png",
+  "placeholder/props/house_tv.png",
+  "placeholder/ui/drawer.png",
+  "placeholder/ui/trash.png",
 ];
 
 self.addEventListener('install', (event) => {
