@@ -25,7 +25,15 @@ def media_in(folder):
     base = ROOT / folder
     if not base.exists():
         return []
-    return sorted(rel(p) for p in base.rglob("*") if p.is_file() and (p.suffix.lower() in MEDIA or folder == "vendor"))
+    found = []
+    for p in sorted(base.rglob("*")):
+        if not p.is_file() or not (p.suffix.lower() in MEDIA or folder == "vendor"):
+            continue
+        if not re.fullmatch(r"[a-z0-9_./-]+", rel(p)):
+            print(f"SKIPPED (use lowercase, no spaces; originals go in art-source/): {rel(p)}")
+            continue
+        found.append(rel(p))
+    return found
 
 
 def main():

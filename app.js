@@ -2,7 +2,7 @@ import { createSaver, NewerSaveError, NotABackupError } from './save.js';
 import { startGame } from './game.js';
 
 // Set with: python tools/release.py 1.2.3 (keeps sw.js in step).
-const VERSION = '0.4.0';
+const VERSION = '0.4.1';
 
 const $ = (id) => document.getElementById(id);
 $('panel-version').textContent = VERSION;

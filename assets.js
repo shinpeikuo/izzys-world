@@ -1,6 +1,5 @@
 // Written by tools/release.py: the real art files in art/. Do not edit by hand.
 export const ART = new Set([
- "art/places/Main World scene selector/main scene selector.jpg",
  "art/places/cafe_bg.webp",
  "art/places/castle_bedroom_bg.webp",
  "art/places/castle_dining_bg.webp",

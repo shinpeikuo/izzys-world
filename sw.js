@@ -1,6 +1,6 @@
 // Set the version with: python tools/release.py 1.2.3 (also updates app.js).
 // That is what tells tablets there is an update to download.
-const VERSION = '0.4.0';
+const VERSION = '0.4.1';
 const CACHE = 'izzys-world-' + VERSION;
 
 // Every file the game needs to run offline. Filled in by tools/release.py.
@@ -18,7 +18,6 @@ const FILES = [
   "icons/icon-512.png",
   "icons/icon-maskable-512.png",
   "vendor/phaser.min.js",
-  "art/places/Main World scene selector/main scene selector.jpg",
   "art/places/cafe_bg.webp",
   "art/places/castle_bedroom_bg.webp",
   "art/places/castle_dining_bg.webp",
